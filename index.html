@@ -1,1 +1,344 @@
-test
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>gelgidek.com — Yurt Dışı Tur & Vize Danışmanlığı</title>
+  <meta name="description" content="Yurt dışı tur planlama ve vize işlemleri için danışmanlık. Rota, rezervasyon, evrak hazırlığı ve başvuru takibi." />
+  <meta name="theme-color" content="#104271" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/style.css" />
+</head>
+
+<body>
+  <a class="skip" href="#main">İçeriğe atla</a>
+
+  <header class="header">
+    <div class="container header__inner">
+      <a class="brand" href="/" aria-label="gelgidek.com ana sayfa">
+        <!-- Inline SVG logo: no image files -->
+        <svg class="logo" viewBox="0 0 980 140" role="img" aria-label="GELGİDEK.COM">
+          <title>GELGİDEK.COM</title>
+          <style>
+            .t1{font-family:Poppins,Arial,sans-serif;font-weight:700;letter-spacing:10px;fill:#104271}
+            .t2{font-family:Poppins,Arial,sans-serif;font-weight:700;letter-spacing:10px;fill:#74dff6}
+          </style>
+          <text class="t1" x="10" y="100" font-size="92">GELGİDEK</text>
+          <circle cx="592" cy="94" r="7" fill="#74dff6" />
+          <text class="t2" x="625" y="100" font-size="92">COM</text>
+        </svg>
+      </a>
+
+      <button class="nav__toggle" type="button" aria-expanded="false" aria-controls="navMenu">
+        <span class="sr">Menü</span>
+        <span class="hamburger" aria-hidden="true"></span>
+      </button>
+
+      <nav id="navMenu" class="nav" aria-label="Ana menü">
+        <a href="#hizmetler">Hizmetler</a>
+        <a href="#surec">Süreç</a>
+        <a href="#sss">SSS</a>
+        <a class="btn btn--sm" href="#iletisim">İletişim</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="hero">
+      <div class="container hero__grid">
+        <div class="hero__content">
+          <p class="badge">Yurt dışı tur • vize • evrak • başvuru takibi</p>
+          <h1>Yurt dışına <span class="accent">kolay</span> çıkın. Planı birlikte yapalım.</h1>
+          <p class="lead">
+            gelgidek.com; bütçenize ve hedefinize göre tur planlama, rezervasyon desteği ve vize işlemleri için
+            uçtan uca danışmanlık sunar. Sizin yerinize koşturur, süreci sadeleştiririz.
+          </p>
+          <div class="hero__cta">
+            <a class="btn" href="#iletisim">Ücretsiz ön görüşme</a>
+            <a class="btn btn--ghost" href="#hizmetler">Hizmetleri incele</a>
+          </div>
+
+          <div class="hero__stats" aria-label="Öne çıkan bilgiler">
+            <div class="stat">
+              <div class="stat__n">48s</div>
+              <div class="stat__t">içinde dönüş</div>
+            </div>
+            <div class="stat">
+              <div class="stat__n">1:1</div>
+              <div class="stat__t">kişisel danışmanlık</div>
+            </div>
+            <div class="stat">
+              <div class="stat__n">Net</div>
+              <div class="stat__t">checklist & takvim</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero__card" aria-label="Hızlı teklif kartı">
+          <h2>Hızlı teklif alın</h2>
+          <p class="muted">2 dakikada ön bilgi bırakın, size en uygun yol haritasını paylaşalım.</p>
+
+          <!-- Netlify Forms: submissions are visible in Netlify dashboard -->
+          <form name="quick-lead" method="POST" data-netlify="true" data-netlify-honeypot="bot-field" action="/thanks.html">
+            <input type="hidden" name="form-name" value="quick-lead" />
+            <p class="hidden">
+              <label>Bot alanı: <input name="bot-field" /></label>
+            </p>
+
+            <label>
+              Gideceğiniz ülke
+              <input name="country" autocomplete="country-name" placeholder="Örn. İtalya / Almanya / Dubai" required />
+            </label>
+            <label>
+              Tarih aralığı
+              <input name="date_range" placeholder="Örn. Mayıs 2026 / 10–17 Haziran" />
+            </label>
+            <label>
+              Telefon
+              <input name="phone" inputmode="tel" autocomplete="tel" placeholder="+90 5xx xxx xx xx" required />
+            </label>
+            <button class="btn btn--block" type="submit">Gönder</button>
+            <p class="tiny muted">Göndererek, sizinle iletişime geçmemizi kabul etmiş olursunuz.</p>
+          </form>
+        </div>
+      </div>
+      <div class="hero__bg" aria-hidden="true"></div>
+    </section>
+
+    <section id="hizmetler" class="section">
+      <div class="container">
+        <div class="section__head">
+          <h2>Hizmetler</h2>
+          <p class="muted">Tek seferlik soru-cevap ya da uçtan uca paket. İhtiyacınıza göre.</p>
+        </div>
+
+        <div class="cards">
+          <article class="card">
+            <h3>Vize danışmanlığı</h3>
+            <p>Uygun vize türü, evrak listesi, randevu planı, form/başvuru yönlendirmesi ve takip.</p>
+            <ul class="check">
+              <li>Check-list & dosya düzeni</li>
+              <li>Takvim ve randevu stratejisi</li>
+              <li>Başvuru süreci rehberliği</li>
+            </ul>
+          </article>
+
+          <article class="card">
+            <h3>Tur planlama</h3>
+            <p>Şehir/rota seçimi, gün gün plan, ulaşım önerileri, bütçe optimizasyonu ve yerel ipuçları.</p>
+            <ul class="check">
+              <li>Gün gün rota</li>
+              <li>Bütçe & zaman planı</li>
+              <li>Güvenli, pratik öneriler</li>
+            </ul>
+          </article>
+
+          <article class="card">
+            <h3>Rezervasyon desteği</h3>
+            <p>Uçuş/konaklama alternatifleri, iptal koşulları ve vize uyumlu rezervasyon kurgusu.</p>
+            <ul class="check">
+              <li>Uçuş ve otel karşılaştırması</li>
+              <li>Vize uyumlu rezervasyon</li>
+              <li>İptal & değişiklik okuması</li>
+            </ul>
+          </article>
+
+          <article class="card">
+            <h3>Sigorta & ek evrak</h3>
+            <p>Seyahat sağlık sigortası, davetiye, sponsorluk belgeleri ve supporting docs düzeni.</p>
+            <ul class="check">
+              <li>Sigorta kapsam kontrolü</li>
+              <li>Sponsorluk/davetiye kurgusu</li>
+              <li>Eksik evrak tespiti</li>
+            </ul>
+          </article>
+        </div>
+
+        <div class="callout">
+          <div>
+            <h3>“Sadece bir sorum var” paketi</h3>
+            <p class="muted">15–30 dk görüşme + sizin durumunuza özel net bir yol haritası.</p>
+          </div>
+          <a class="btn" href="#iletisim">Randevu iste</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="surec" class="section section--alt">
+      <div class="container">
+        <div class="section__head">
+          <h2>Süreç nasıl işliyor?</h2>
+          <p class="muted">Kafa karışıklığını azaltan 4 adım.</p>
+        </div>
+
+        <ol class="steps">
+          <li class="step">
+            <div class="step__n">1</div>
+            <div class="step__c">
+              <h3>Ön görüşme</h3>
+              <p>Hedef ülke, tarih, bütçe, önceki vizeler ve ihtiyaçlarınızı netleştiririz.</p>
+            </div>
+          </li>
+          <li class="step">
+            <div class="step__n">2</div>
+            <div class="step__c">
+              <h3>Plan & checklist</h3>
+              <p>Sizin için kişisel evrak listesi ve takvim çıkarır, riskleri konuşuruz.</p>
+            </div>
+          </li>
+          <li class="step">
+            <div class="step__n">3</div>
+            <div class="step__c">
+              <h3>Uygulama</h3>
+              <p>Formlar, rezervasyon kurgusu ve dosya düzeniyle başvuruyu sorunsuz hale getiririz.</p>
+            </div>
+          </li>
+          <li class="step">
+            <div class="step__n">4</div>
+            <div class="step__c">
+              <h3>Takip</h3>
+              <p>Başvuru sonrası süreci takip eder, gerekirse ek doküman taleplerini yönetiriz.</p>
+            </div>
+          </li>
+        </ol>
+
+        <div class="banner">
+          <div>
+            <h3>Şeffaflık</h3>
+            <p class="muted">Burada hiçbir “%100 garanti” vaadi yok. Sadece doğru hazırlık, doğru strateji ve net iletişim.</p>
+          </div>
+          <a class="btn btn--ghost" href="#sss">Sık sorulanlar</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="sss" class="section">
+      <div class="container">
+        <div class="section__head">
+          <h2>Sık sorulan sorular</h2>
+          <p class="muted">En çok gelen soruları kısaca yanıtladık.</p>
+        </div>
+
+        <div class="faq">
+          <details class="faq__item">
+            <summary>Vize başvurusunu siz mi yapıyorsunuz?</summary>
+            <p>
+              Danışmanlık veriyoruz: uygun vize türü, evrak listesi, dosya düzeni, form yönlendirmesi ve randevu planı.
+              Başvurunun nihai adımları başvuru sahibinin sorumluluğundadır.
+            </p>
+          </details>
+
+          <details class="faq__item">
+            <summary>Ne kadar sürede dönüş yapıyorsunuz?</summary>
+            <p>Genellikle 24–48 saat içinde ilk dönüş yapılır. Yoğun dönemlerde süre uzayabilir.</p>
+          </details>
+
+          <details class="faq__item">
+            <summary>Tur planı tamamen kişiye özel mi?</summary>
+            <p>Evet. “Şehir x gün, bütçe y” gibi bilgilerle gün gün rota, ulaşım ve pratik öneriler hazırlanır.</p>
+          </details>
+
+          <details class="faq__item">
+            <summary>Ödeme ve paketler nasıl?</summary>
+            <p>İhtiyaca göre tek görüşme veya paket şeklinde çalışabiliriz. Ücret bilgisini görüşme sonrası netleştiririz.</p>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <section id="iletisim" class="section section--alt">
+      <div class="container contact">
+        <div class="contact__info">
+          <h2>İletişim</h2>
+          <p class="muted">
+            Formu doldurun ya da doğrudan yazın. Mesajlarınız Netlify Forms ile kaydedilir;
+            ayrıca Netlify panelinden tüm başvuruları görebilirsiniz.
+          </p>
+
+          <div class="contact__cards">
+            <div class="mini">
+              <div class="mini__k">E-posta</div>
+              <a class="mini__v" href="mailto:info@gelgidek.com">info@gelgidek.com</a>
+            </div>
+            <div class="mini">
+              <div class="mini__k">Telefon</div>
+              <a class="mini__v" href="tel:+905555555555">+90 555 555 55 55</a>
+            </div>
+            <div class="mini">
+              <div class="mini__k">Çalışma saatleri</div>
+              <div class="mini__v">Hafta içi 10:00–18:00</div>
+            </div>
+          </div>
+
+          <p class="tiny muted">
+            Not: Bu sayfa örnek içeriklerle doldurulmuştur. İstediğiniz metinlere göre birlikte düzenleyebiliriz.
+          </p>
+        </div>
+
+        <div class="contact__form card">
+          <h3>Mesaj bırakın</h3>
+
+          <form name="contact" method="POST" data-netlify="true" data-netlify-honeypot="bot-field" action="/thanks.html">
+            <input type="hidden" name="form-name" value="contact" />
+            <p class="hidden">
+              <label>Bot alanı: <input name="bot-field" /></label>
+            </p>
+
+            <label>
+              Ad Soyad
+              <input name="name" autocomplete="name" placeholder="Adınız Soyadınız" required />
+            </label>
+
+            <label>
+              E-posta
+              <input type="email" name="email" autocomplete="email" placeholder="ornek@mail.com" required />
+            </label>
+
+            <label>
+              Konu
+              <select name="topic" required>
+                <option value="" selected disabled>Seçin…</option>
+                <option>Vize danışmanlığı</option>
+                <option>Tur planlama</option>
+                <option>Rezervasyon desteği</option>
+                <option>Diğer</option>
+              </select>
+            </label>
+
+            <label>
+              Mesaj
+              <textarea name="message" rows="5" placeholder="Kısaca ihtiyacınızı yazın…" required></textarea>
+            </label>
+
+            <button class="btn btn--block" type="submit">Gönder</button>
+            <p class="tiny muted">Form gönderimleri Netlify panelinde “Forms” bölümünde görünür.</p>
+          </form>
+
+          <div class="adminLink">
+            <a class="btn btn--ghost btn--sm" href="/admin.html">Basit Admin (opsiyonel)</a>
+            <span class="tiny muted">Netlify token ayarlanırsa mesajları burada da görebilirsiniz.</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer__inner">
+      <div class="footer__brand">
+        <span class="dot" aria-hidden="true"></span>
+        <span>© <span id="year"></span> gelgidek.com</span>
+      </div>
+      <div class="footer__links">
+        <a href="#hizmetler">Hizmetler</a>
+        <a href="#iletisim">İletişim</a>
+        <a href="/admin.html">Admin</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="/assets/app.js" defer></script>
+</body>
+</html>
