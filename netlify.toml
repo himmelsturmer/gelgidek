@@ -1,6 +1,0 @@
-[build]
-  publish = "."
-  functions = "netlify/functions"
-
-# No build step is required (pure static).
-# Deploy: connect repo -> Netlify will publish this folder and run functions automatically.

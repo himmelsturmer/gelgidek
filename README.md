@@ -1,28 +1,23 @@
-# gelgidek.com (Netlify-ready static site + optional admin)
+# gelgidek.com — Yurt Dışı Tur & Vize Danışmanlığı
 
-Bu repo **build gerektirmeyen** (pure static) bir site ve **Netlify Forms** ile çalışan 2 form içerir:
-- `quick-lead` (hero içinde hızlı teklif)
-- `contact` (iletişim formu)
+Bu repo **build gerektirmeyen** (pure static) bir seyahat danışmanlığı sitesidir.
 
-## Deploy (Netlify)
-1) GitHub repo’yu Netlify’a bağla  
-2) Build command: **boş bırak** (gerek yok)  
-3) Publish directory: repo root (**.**)  
+## Yapı
 
-Deploy sonrası Netlify panelinde:
-- **Forms** -> form gönderimlerini görürsün (en kolay yol).
+- `index.html` — Ana sayfa
+- `thanks.html` — Teşekkür sayfası
+- `assets/style.css` — Stil dosyası
+- `assets/app.js` — Minimal JavaScript (yıl, menü toggle)
 
-## Opsiyonel: /admin.html ile mesajları listeme
-Admin listeleme için Netlify API kullanılır (token server-side, kullanıcıya görünmez).
+## Deploy
 
-Netlify Site settings -> **Environment variables** içine ekle:
+Herhangi bir statik hosting servisi (Netlify, Vercel, GitHub Pages vb.) ile deploy edilebilir.
 
-- `ADMIN_USER` = örn. `admin`
-- `ADMIN_PASS` = güçlü bir şifre
-- `NETLIFY_SITE_ID` = Site settings -> Site information -> Site ID
-- `NETLIFY_ACCESS_TOKEN` = Netlify User settings -> Applications -> Personal access tokens
-- (opsiyonel) `NETLIFY_FORM_NAME` = `contact` (default)
+1. Repo'yu hosting servisine bağla
+2. Build command: **boş bırak** (gerek yok)
+3. Publish directory: repo root (**.**)
 
-Sonra `/admin.html` sayfasına gidip kullanıcı/şifre ile giriş yap.
+## İletişim
 
-> Not: Formun Netlify tarafından algılanması için en az 1 kez deploy edilmiş olması gerekir.
+- E-posta: emre@gelgidek.com
+- Telefon: +90 507 442 43 78
