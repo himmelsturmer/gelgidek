@@ -46,12 +46,12 @@ a{color:inherit;text-decoration:none}
 .logo--sm{height:34px}
 
 .nav{display:flex;align-items:center;gap:14px}
-.nav a{
+.nav a:not(.btn){
   padding:10px 10px;border-radius:12px;
   color:var(--c-primary);
   font-weight:500;
 }
-.nav a:hover{background:rgba(116,223,246,.18)}
+.nav a:not(.btn):hover{background:rgba(116,223,246,.18)}
 .nav__toggle{
   display:none;
   border:1px solid var(--c-border);
@@ -282,5 +282,5 @@ textarea{resize:vertical}
     box-shadow:var(--shadow);
   }
   .nav.open{display:flex}
-  .nav a{padding:10px 12px}
+  .nav a:not(.btn){padding:10px 12px}
 }
