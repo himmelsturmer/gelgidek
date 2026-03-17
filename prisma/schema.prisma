@@ -1,0 +1,72 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model CarouselSlide {
+  id        Int     @id @default(autoincrement())
+  imageUrl  String
+  title     String
+  subtitle  String?
+  link      String?
+  order     Int     @default(0)
+  active    Boolean @default(true)
+  createdAt DateTime @default(now())
+}
+
+model Country {
+  id         Int        @id @default(autoincrement())
+  name       String
+  slug       String     @unique
+  flagUrl    String?
+  continent  String?
+  showOnHome Boolean    @default(false)
+  homeOrder  Int?
+  visaInfos  VisaInfo[]
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+}
+
+model VisaInfo {
+  id               Int     @id @default(autoincrement())
+  countryId        Int
+  country          Country @relation(fields: [countryId], references: [id], onDelete: Cascade)
+  purpose          String  // Gidiş amacı: Turizm, İş, Eğitim, vb.
+  profession       String  // Meslek: Ücretli Çalışan, Serbest Meslek, vb.
+  documentList     String  // JSON stringified array
+  applicationZones String  @default("[]") // JSON stringified array
+  processingTime   String  @default("")
+  description      String  @default("")
+  embassyName      String?
+  embassyAddress   String?
+  embassyPhone     String?
+  embassyWeb       String?
+  consulateName    String?
+  consulateAddress String?
+  consulatePhone   String?
+  consulateWeb     String?
+  pdf1Url          String?
+  pdf1Label        String?
+  pdf2Url          String?
+  pdf2Label        String?
+  pdf3Url          String?
+  pdf3Label        String?
+  pdf4Url          String?
+  pdf4Label        String?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}
+
+model Admin {
+  id           Int      @id @default(autoincrement())
+  username     String   @unique
+  passwordHash String
+  createdAt    DateTime @default(now())
+}
