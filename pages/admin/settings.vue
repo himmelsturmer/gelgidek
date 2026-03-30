@@ -60,6 +60,10 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 
+definePageMeta({
+  layout: 'admin'
+})
+
 const loading = ref(true)
 const saving = ref(false)
 const successMsg = ref('')

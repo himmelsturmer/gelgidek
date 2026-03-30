@@ -91,6 +91,10 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 
+definePageMeta({
+  layout: 'admin'
+})
+
 const countries = ref([])
 const loading = ref(true)
 const editing = ref(null)
