@@ -29,6 +29,12 @@
         <NuxtLink class="admin-nav-item" to="/admin/users">
           👤 Kullanıcı Yönetimi
         </NuxtLink>
+        <NuxtLink class="admin-nav-item" to="/admin/visa-regime">
+          📋 Vize Rejim Tablosu
+        </NuxtLink>
+        <NuxtLink class="admin-nav-item" to="/admin/settings">
+          ⚙️ Genel Ayarlar
+        </NuxtLink>
         <NuxtLink class="admin-nav-item" to="/" target="_blank">
           🌐 Siteyi Görüntüle
         </NuxtLink>
@@ -66,6 +72,8 @@ const titles: Record<string, string> = {
   '/admin/home-countries': 'Ana Sayfa Ülke Kartları',
   '/admin/countries': 'Ülkeler',
   '/admin/users': 'Kullanıcı Yönetimi',
+  '/admin/settings': 'Genel Ayarlar',
+  '/admin/visa-regime': 'Vize Rejim Tablosu'
 }
 const title = computed(() => {
   if (route.path.includes('/admin/countries/') && route.params.id) return 'Ülke Düzenleme'
