@@ -21,7 +21,7 @@
     "jose": "^5.2.3",
     "nodemailer": "^6.9.13",
     "nuxt": "^3.11.1",
-    "otplib": "^13.4.0",
+    "otpauth": "^9.5.0",
     "qrcode": "^1.5.4"
   },
   "devDependencies": {

@@ -1,4 +1,4 @@
-import { authenticator } from 'otplib'
+import * as OTPAuth from 'otpauth'
 import QRCode from 'qrcode'
 import { prisma } from '~/server/utils/prisma'
 import { verifyToken } from '~/server/utils/jwt'
@@ -13,9 +13,18 @@ export default defineEventHandler(async (event) => {
     const admin = await prisma.admin.findUnique({ where: { id } })
     if (!admin) throw createError({ statusCode: 404, message: 'Kullanıcı bulunamadı' })
 
-    // Generate a new TOTP secret (not saved to DB yet)
-    const secret = authenticator.generateSecret()
-    const otpauthUrl = authenticator.keyuri(admin.username, 'gelgidek.com', secret)
+    const newSecret = new OTPAuth.Secret({ size: 20 })
+    const totp = new OTPAuth.TOTP({
+        issuer: 'gelgidek',
+        label: admin.username,
+        algorithm: 'SHA1',
+        digits: 6,
+        period: 30,
+        secret: newSecret
+    })
+
+    const secret = newSecret.base32
+    const otpauthUrl = totp.toString()
     const qrCodeDataUrl = await QRCode.toDataURL(otpauthUrl)
 
     return { secret, qrCodeDataUrl }

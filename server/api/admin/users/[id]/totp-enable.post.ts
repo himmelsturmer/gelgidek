@@ -1,4 +1,4 @@
-import { authenticator } from 'otplib'
+import * as OTPAuth from 'otpauth'
 import { prisma } from '~/server/utils/prisma'
 import { verifyToken } from '~/server/utils/jwt'
 
@@ -15,7 +15,16 @@ export default defineEventHandler(async (event) => {
         throw createError({ statusCode: 400, message: 'Gerekli alanlar eksik' })
     }
 
-    const isValid = authenticator.verify({ token: code, secret })
+    const totp = new OTPAuth.TOTP({
+        algorithm: 'SHA1',
+        digits: 6,
+        period: 30,
+        secret: OTPAuth.Secret.fromBase32(secret)
+    })
+    
+    const delta = totp.validate({ token: code, window: 1 })
+    const isValid = delta !== null
+
     if (!isValid) {
         throw createError({ statusCode: 400, message: 'Geçersiz doğrulama kodu. Lütfen tekrar deneyin.' })
     }
