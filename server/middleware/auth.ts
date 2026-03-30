@@ -3,8 +3,8 @@ import { verifyToken } from '../utils/jwt'
 export default defineEventHandler(async (event) => {
     const path = getRequestURL(event).pathname
 
-    // Sadece /api/admin/* rotalarını koru (login hariç)
-    if (path.startsWith('/api/admin') && !path.includes('/api/admin/login')) {
+    // Sadece /api/admin/* rotalarını koru (login ve totp-verify hariç)
+    if (path.startsWith('/api/admin') && !path.includes('/api/admin/login') && !path.includes('/api/admin/totp-verify')) {
         const authHeader = getHeader(event, 'authorization')
         const cookieToken = getCookie(event, 'admin_token')
         const token = authHeader?.replace('Bearer ', '') || cookieToken
