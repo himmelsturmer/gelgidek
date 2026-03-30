@@ -22,16 +22,22 @@ model CarouselSlide {
 }
 
 model Country {
-  id         Int        @id @default(autoincrement())
-  name       String
-  slug       String     @unique
-  flagUrl    String?
-  continent  String?
-  showOnHome Boolean    @default(false)
-  homeOrder  Int?
-  visaInfos  VisaInfo[]
-  createdAt  DateTime   @default(now())
-  updatedAt  DateTime   @updatedAt
+  id                 Int        @id @default(autoincrement())
+  name               String
+  slug               String     @unique
+  flagUrl            String?
+  continent          String?
+  showOnHome         Boolean    @default(false)
+  homeOrder          Int?
+  visaUmumi          String?
+  visaUmumiNote      String?
+  visaHususi         String?
+  visaHususiNote     String?
+  visaDiplomatik     String?
+  visaDiplomatikNote String?
+  visaInfos          VisaInfo[]
+  createdAt          DateTime   @default(now())
+  updatedAt          DateTime   @updatedAt
 }
 
 model VisaInfo {
@@ -87,6 +93,13 @@ model Faq {
   question  String
   answer    String
   order     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Setting {
+  key       String   @id
+  value     String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
