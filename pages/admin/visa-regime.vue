@@ -91,9 +91,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 
-definePageMeta({
-  layout: 'admin'
-})
+definePageMeta({ layout: 'admin', middleware: 'admin' })
 
 const countries = ref([])
 const loading = ref(true)

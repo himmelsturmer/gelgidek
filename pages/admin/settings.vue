@@ -60,9 +60,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 
-definePageMeta({
-  layout: 'admin'
-})
+definePageMeta({ layout: 'admin', middleware: 'admin' })
 
 const loading = ref(true)
 const saving = ref(false)
