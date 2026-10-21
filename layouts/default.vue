@@ -24,6 +24,7 @@
 
         <nav id="navMenu" :class="['nav', navOpen && 'nav--open']" aria-label="Ana menü">
           <NuxtLink to="/" @click="navOpen=false">Anasayfa</NuxtLink>
+          <NuxtLink to="/turlar" @click="navOpen=false">Turlar</NuxtLink>
           <NuxtLink to="/ulkeler" @click="navOpen=false">Ülkeler</NuxtLink>
           <NuxtLink to="/vize-rejim-tablosu" @click="navOpen=false">Vize Rejim Tablosu</NuxtLink>
           <NuxtLink to="/hakkimizda" @click="navOpen=false">Hakkımızda</NuxtLink>
@@ -47,9 +48,11 @@
             <div class="footer__title">Sayfalar</div>
             <div class="footer__links">
               <NuxtLink to="/">Anasayfa</NuxtLink>
+              <NuxtLink to="/turlar">Turlar</NuxtLink>
               <NuxtLink to="/ulkeler">Ülkeler</NuxtLink>
               <NuxtLink to="/vize-rejim-tablosu">Vize Rejim Tablosu</NuxtLink>
               <NuxtLink to="/hakkimizda">Hakkımızda</NuxtLink>
+              <NuxtLink to="/randevu-sorgulama">Randevu Sorgulama</NuxtLink>
               <NuxtLink to="/iletisim">İletişim</NuxtLink>
             </div>
           </div>
@@ -68,6 +71,8 @@
         </div>
       </div>
     </footer>
+    
+    <VisaChatbot />
   </div>
 </template>
 

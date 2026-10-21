@@ -37,7 +37,8 @@
       <div class="admin-card__header"><h2>Hızlı Erişim</h2></div>
       <div class="admin-card__body">
         <div style="display:flex;gap:12px;flex-wrap:wrap;">
-          <NuxtLink to="/admin/carousel" class="btn btn--primary btn--sm">🖼 Slaytları Düzenle</NuxtLink>
+          <NuxtLink to="/admin/tours" class="btn btn--primary btn--sm">🚌 Turları Düzenle</NuxtLink>
+          <NuxtLink to="/admin/carousel" class="btn btn--ghost btn--sm">🖼 Slaytları Düzenle</NuxtLink>
           <NuxtLink to="/admin/countries" class="btn btn--accent btn--sm">🌍 Ülke Ekle/Düzenle</NuxtLink>
         </div>
       </div>

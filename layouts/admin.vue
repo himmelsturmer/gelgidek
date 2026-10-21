@@ -21,8 +21,19 @@
         </NuxtLink>
 
         <div class="admin-nav-section">İçerik</div>
+        <NuxtLink class="admin-nav-item" to="/admin/tours">
+          🚌 Turlar Yönetimi
+        </NuxtLink>
         <NuxtLink class="admin-nav-item" to="/admin/countries">
           📋 Ülkeler & Vize Bilgisi
+        </NuxtLink>
+
+        <div class="admin-nav-section">CRM</div>
+        <NuxtLink class="admin-nav-item" to="/admin/visa-basvuru">
+          🗓 Vize Başvuruları
+        </NuxtLink>
+        <NuxtLink class="admin-nav-item" to="/admin/crm/settings">
+          ⚙️ B2B Ayarlar & Cari
         </NuxtLink>
 
         <div class="admin-nav-section">Sistem</div>
@@ -70,10 +81,13 @@ const titles: Record<string, string> = {
   '/admin/dashboard': 'Dashboard',
   '/admin/carousel': 'Carousel Yönetimi',
   '/admin/home-countries': 'Ana Sayfa Ülke Kartları',
+  '/admin/tours': 'Turlar Yönetimi',
   '/admin/countries': 'Ülkeler',
   '/admin/users': 'Kullanıcı Yönetimi',
   '/admin/settings': 'Genel Ayarlar',
-  '/admin/visa-regime': 'Vize Rejim Tablosu'
+  '/admin/visa-regime': 'Vize Rejim Tablosu',
+  '/admin/visa-basvuru': 'Vize Başvuruları',
+  '/admin/crm/settings': 'B2B Ayarlar & Cari',
 }
 const title = computed(() => {
   if (route.path.includes('/admin/countries/') && route.params.id) return 'Ülke Düzenleme'

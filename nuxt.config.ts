@@ -1,6 +1,7 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   devtools: { enabled: true },
+  telemetry: false,
 
   css: ['~/assets/css/main.css'],
 
@@ -12,6 +13,7 @@ export default defineNuxtConfig({
     smtpUser: process.env.SMTP_USER || '',
     smtpPass: process.env.SMTP_PASS || '',
     smtpFrom: process.env.SMTP_FROM || '',
+    geminiApiKey: process.env.GEMINI_API_KEY || '',
     // Public — exposed to client
     public: {
       siteName: process.env.SITE_NAME || 'gelgidek.com'

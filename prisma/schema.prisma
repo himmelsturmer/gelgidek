@@ -103,3 +103,160 @@ model Setting {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+
+// ─────────────────────────────────────────────
+// Vize Başvuru & Randevu Takip Modülü
+// ─────────────────────────────────────────────
+
+enum VisaStatus {
+  EVRAK_BEKLIYOR
+  RANDEVU_BEKLIYOR
+  SONUC_BEKLIYOR
+  ONAY
+  RED
+}
+
+model VisaCustomer {
+  id           Int              @id @default(autoincrement())
+  ad           String
+  soyad        String
+  pasaportNo   String
+  tcNo         String?
+  telefon      String?
+  email        String?
+  dogumTarihi  DateTime?
+  applications VisaApplication[]
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+}
+
+model PublicHoliday {
+  id        Int      @id @default(autoincrement())
+  tarih     DateTime @unique
+  isim      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model VisaInstitution {
+  id           Int               @id @default(autoincrement())
+  ad           String
+  adres        String?
+  mapsLink     String?
+  appointments VisaAppointment[]
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+}
+
+model VisaSupplier {
+  id           Int               @id @default(autoincrement())
+  ofisAdi      String
+  adres        String?
+  mapsLink     String?
+  appointments VisaAppointment[]
+  payments     SupplierPayment[]
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+}
+
+model VisaAppointment {
+  id            Int              @id @default(autoincrement())
+  tarih         DateTime
+  saat          String
+  konum         String?          // Deprecated, use institutionId instead
+  institutionId Int?
+  institution   VisaInstitution? @relation(fields: [institutionId], references: [id], onDelete: SetNull)
+  supplierId    Int?
+  supplier      VisaSupplier?    @relation(fields: [supplierId], references: [id], onDelete: SetNull)
+  applicationId Int              @unique
+  application   VisaApplication  @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+}
+
+model VisaApplication {
+  id               Int              @id @default(autoincrement())
+  customerId       Int
+  customer         VisaCustomer     @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  ulke             String
+  seyahatTarihi    DateTime?
+  durum            VisaStatus       @default(EVRAK_BEKLIYOR)
+  notlar           String?
+  // Vize Geçerlilik
+  visaStartDate    DateTime?
+  visaEndDate      DateTime?
+  // Finans Desteği
+  currency         String           @default("TRY")
+  toplamTutar      Float            @default(0)
+  odenenTutar      Float            @default(0) // Cache amaçlı
+  supplierCost     Float            @default(0)
+  supplierCurrency String           @default("TRY")
+  // İlişkiler
+  appointment      VisaAppointment?
+  payments         VisaPayment[]
+  emailLogs        VisaEmailLog[]
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+}
+
+model VisaEmailLog {
+  id            Int              @id @default(autoincrement())
+  applicationId Int
+  application   VisaApplication  @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  toEmail       String
+  sentAt        DateTime         @default(now())
+}
+
+model VisaPayment {
+  id            Int              @id @default(autoincrement())
+  applicationId Int
+  application   VisaApplication  @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  tutar         Float
+  currency      String           @default("TRY") // TL, USD, EUR, GBP
+  tarih         DateTime         @default(now())
+  not           String?
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+}
+
+model SupplierPayment {
+  id           Int              @id @default(autoincrement())
+  supplierId   Int
+  supplier     VisaSupplier     @relation(fields: [supplierId], references: [id], onDelete: Cascade)
+  tutar        Float
+  currency     String           @default("TRY")
+  tarih        DateTime         @default(now())
+  not          String?
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+}
+
+// ─────────────────────────────────────────────
+// Turlar Modülü
+// ─────────────────────────────────────────────
+
+model Tour {
+  id               Int      @id @default(autoincrement())
+  title            String
+  slug             String   @unique
+  subtitle         String?
+  destination      String?
+  duration         String   @default("")
+  startingPrice    String?
+  imageUrl         String?
+  pdfUrl           String?
+  summaryBadges    String   @default("[]") // JSON stringified array
+  itinerary        String   @default("[]") // JSON stringified array of { day, title, description }
+  pricingPackages  String   @default("[]") // JSON stringified array of hotel pricing objects
+  includedServices String   @default("[]") // JSON stringified array
+  excludedServices String   @default("[]") // JSON stringified array
+  departureDates   String   @default("[]") // JSON stringified array
+  specialDates     String   @default("[]") // JSON stringified array
+  extraPackage     String?
+  notes            String   @default("[]") // JSON stringified array
+  order            Int      @default(0)
+  active           Boolean  @default(true)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}
+
