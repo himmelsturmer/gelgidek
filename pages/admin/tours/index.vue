@@ -542,24 +542,139 @@ const extractTextWithPdfJs = async (file: File): Promise<string> => {
   }
 }
 
+const DEFAULT_TOUR_IMAGES: Record<string, string> = {
+  yunanistan: 'https://images.unsplash.com/photo-1533105079780-92b9be482077?q=80&w=1600&auto=format&fit=crop',
+  bulgaristan: 'https://images.unsplash.com/photo-1563284223-333497472e88?q=80&w=1600&auto=format&fit=crop',
+  kayak: 'https://images.unsplash.com/photo-1551524559-8af4e6624178?q=80&w=1600&auto=format&fit=crop',
+  bansko: 'https://images.unsplash.com/photo-1551524559-8af4e6624178?q=80&w=1600&auto=format&fit=crop',
+  atina: 'https://images.unsplash.com/photo-1555993539-1732b0258235?q=80&w=1600&auto=format&fit=crop',
+  parga: 'https://images.unsplash.com/photo-1530841377377-3ff06c0ca713?q=80&w=1600&auto=format&fit=crop',
+  korfu: 'https://images.unsplash.com/photo-1530841377377-3ff06c0ca713?q=80&w=1600&auto=format&fit=crop',
+  dedeagac: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=1600&auto=format&fit=crop'
+}
+
+const slugifyTr = (text: string): string => {
+  const trMap: Record<string, string> = { ç: 'c', ğ: 'g', ı: 'i', i: 'i', ö: 'o', ş: 's', ü: 'u' }
+  return (text || '')
+    .toLowerCase()
+    .replace(/[çğıiöşü]/g, (m) => trMap[m] || m)
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/(^-|-$)/g, '')
+}
+
+const pickDefaultImage = (title: string, destination: string): string => {
+  const check = slugifyTr(`${title} ${destination}`)
+  for (const [k, url] of Object.entries(DEFAULT_TOUR_IMAGES)) {
+    if (check.includes(k)) return url
+  }
+  return 'https://images.unsplash.com/photo-1488646953014-85cb44e25828?q=80&w=1600&auto=format&fit=crop'
+}
+
 const processPdfFile = async (file: File, openNewModalIfClosed: boolean) => {
   parsingPdf.value = true
   try {
-    const [base64DataUrl, extractedText] = await Promise.all([
+    const [{ apiKey }, base64DataUrl, extractedText] = await Promise.all([
+      $fetch<{ apiKey: string }>('/api/admin/tours/ai-key'),
       readFileAsBase64(file),
       extractTextWithPdfJs(file)
     ])
 
-    const useTextOnly = extractedText.length > 80 || file.size > 3 * 1024 * 1024
+    const prompt = `Sen profesyonel bir tur operatörü içerik uzmanısın. Verilen Türkçe tur broşürü içeriğini incele ve içindeki tüm bilgileri eksiksiz olarak aşağıdaki JSON şemasına uygun şekilde çıkar:
 
-    const extracted: any = await $fetch('/api/admin/tours/parse-pdf', {
-      method: 'POST',
-      body: {
-        pdfText: extractedText,
-        pdfBase64: useTextOnly ? undefined : base64DataUrl,
-        fileName: file.name
+{
+  "title": "Turun ana başlığı (Örn: Bansko Kayak Turu veya Selanik & Kavala & İskeçe Turu)",
+  "subtitle": "Alt başlık veya rota özeti (Örn: Selanik + Kavala + İskeçe + Gümülcine (1 Gece Konaklama))",
+  "destination": "Gidilen ülke veya bölge (Örn: Yunanistan, Bulgaristan, Yunanistan & Bulgaristan, Balkanlar, İtalya vb.)",
+  "duration": "Konaklama ve gün süresi (Örn: 1 Gece 3 Gün, 2 Gece 4 Gün, 3 Gece 5 Gün)",
+  "startingPrice": "En düşük iki kişilik odada kişi başı başlangıç fiyatı (Örn: 129 €)",
+  "summaryBadges": [
+    "Lüks Otobüslerle Ulaşım",
+    "Gizlenmiş Mecburi Ücret Yok",
+    "Yeşil Pasaporta Vize Yok"
+  ],
+  "itinerary": [
+    {
+      "day": "1. Gün",
+      "title": "İstanbul – Selanik",
+      "description": "O güne ait tüm detaylı tur programı metni..."
+    }
+  ],
+  "pricingPackages": [
+    {
+      "hotelName": "Otel adı (Örn: 4* Panorama Hotel V.B)",
+      "board": "Konaklama tipi (Örn: Oda Kahvaltı)",
+      "details": "Otel açıklaması veya dönem bilgisi",
+      "doublePrice": "İki/Üç kişilik odada kişi başı fiyatı (Örn: 129 €)",
+      "singlePrice": "Tek kişilik oda fiyatı (Örn: 209 €)",
+      "child1Price": "3-12 yaş 1. çocuk fiyatı (Örn: 100 €)",
+      "child2Price": "Varsa 2. çocuk fiyatı yoksa '-'",
+      "babyPrice": "0-2 yaş bebek fiyatı (Örn: 0-2 Yaş Ücretsiz)",
+      "period": "Dönem adı (Örn: 2027 Dönemi veya Özel Dönem / Bayram)"
+    }
+  ],
+  "includedServices": [
+    "Fiyata dahil olan her bir madde"
+  ],
+  "excludedServices": [
+    "Fiyata dahil olmayan her bir madde"
+  ],
+  "departureDates": [
+    "Normal hareket tarihleri listesi (Örn: 1 Ocak 2027 Cuma)"
+  ],
+  "specialDates": [
+    "Varsa özel / bayram hareket tarihleri listesi (Örn: 8 Mart 2027 Pazartesi (Ramazan Bayramı))"
+  ],
+  "extraPackage": "Varsa avantajlı ekstra tur paketi bilgisi ve fiyatı, yoksa boş string",
+  "notes": [
+    "NOTLAR bölümündeki her bir madde"
+  ]
+}
+
+Kurallar:
+- PDF içindeki gün gün tur programını kısaltmadan, tüm detaylarıyla "itinerary" dizisine aktar.
+- Birden fazla otel veya dönem fiyat tablosu varsa hepsini ayrı eleman olarak "pricingPackages" dizisine ekle.
+- Hareket tarihlerinin tamamını eksiksiz çıkar.
+- Sadece geçerli bir JSON nesnesi döndür.`
+
+    const parts: any[] = []
+    if (extractedText && extractedText.length > 80) {
+      parts.push({ text: `TUR BROŞÜRÜ METNİ:\n\n${extractedText}\n\n${prompt}` })
+    } else {
+      const cleanBase64 = base64DataUrl.replace(/^data:application\/pdf;base64,/, '')
+      parts.push({ inline_data: { mime_type: 'application/pdf', data: cleanBase64 } })
+      parts.push({ text: prompt })
+    }
+
+    const geminiRes = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{ parts }],
+          generationConfig: {
+            responseMimeType: 'application/json',
+            thinkingConfig: { thinkingBudget: 0 }
+          }
+        })
       }
-    })
+    )
+
+    if (!geminiRes.ok) {
+      const errTxt = await geminiRes.text()
+      throw new Error(`Yapay zeka servisi hatası (${geminiRes.status}): ${errTxt.slice(0, 180)}`)
+    }
+
+    const geminiJson: any = await geminiRes.json()
+    const rawText = geminiJson?.candidates?.[0]?.content?.parts?.[0]?.text || ''
+    let extracted: any = {}
+    try {
+      extracted = JSON.parse(rawText)
+    } catch {
+      const match = rawText.match(/\{[\s\S]*\}/)
+      if (match) extracted = JSON.parse(match[0])
+      else throw new Error('PDF yanıtı ayrıştırılamadı.')
+    }
 
     if (openNewModalIfClosed && !isModalOpen.value) {
       form.value = defaultForm()
@@ -568,17 +683,19 @@ const processPdfFile = async (file: File, openNewModalIfClosed: boolean) => {
     }
 
     uploadedPdfName.value = file.name
-    const slug = extracted.slug || form.value.slug || 'yeni-tur'
+    const title = extracted.title || file.name.replace(/\.pdf$/i, '')
+    const slug = slugifyTr(extracted.slug || title) || 'yeni-tur'
+    const destination = extracted.destination || ''
 
-    form.value.title = extracted.title || form.value.title
+    form.value.title = title
     if (!form.value.id) {
       form.value.slug = slug
     }
     form.value.subtitle = extracted.subtitle || form.value.subtitle
-    form.value.destination = extracted.destination || form.value.destination
+    form.value.destination = destination || form.value.destination
     form.value.duration = extracted.duration || form.value.duration
     form.value.startingPrice = extracted.startingPrice || form.value.startingPrice
-    form.value.imageUrl = extracted.imageUrl || form.value.imageUrl
+    form.value.imageUrl = extracted.imageUrl || form.value.imageUrl || pickDefaultImage(title, destination)
     if (file.size <= 3.5 * 1024 * 1024) {
       form.value.pdfData = base64DataUrl
       form.value.pdfUrl = `/api/tours/${form.value.slug || slug}/pdf`
