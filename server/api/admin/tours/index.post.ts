@@ -7,17 +7,22 @@ function toJsonString(val: any) {
 
 export default defineEventHandler(async (event) => {
     const body = await readBody(event)
+    const slug = body.slug
+    const pdfUrl = body.pdfData
+        ? `/api/tours/${slug}/pdf`
+        : (body.pdfUrl || null)
 
-    return prisma.tour.create({
+    const created = await prisma.tour.create({
         data: {
             title: body.title,
-            slug: body.slug,
+            slug,
             subtitle: body.subtitle || null,
             destination: body.destination || null,
             duration: body.duration || '',
             startingPrice: body.startingPrice || null,
             imageUrl: body.imageUrl || null,
-            pdfUrl: body.pdfUrl || null,
+            pdfUrl,
+            pdfData: body.pdfData || null,
             summaryBadges: toJsonString(body.summaryBadges),
             itinerary: toJsonString(body.itinerary),
             pricingPackages: toJsonString(body.pricingPackages),
@@ -31,4 +36,7 @@ export default defineEventHandler(async (event) => {
             active: body.active !== undefined ? Boolean(body.active) : true
         }
     })
+
+    const { pdfData, ...rest } = created
+    return rest
 })

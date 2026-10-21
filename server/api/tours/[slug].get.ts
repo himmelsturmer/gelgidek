@@ -13,8 +13,10 @@ export default defineEventHandler(async (event) => {
         throw createError({ statusCode: 404, message: 'Tur bulunamadı' })
     }
 
+    const { pdfData, ...rest } = tour
+
     return {
-        ...tour,
+        ...rest,
         summaryBadges: safeParse(tour.summaryBadges),
         itinerary: safeParse(tour.itinerary),
         pricingPackages: safeParse(tour.pricingPackages),

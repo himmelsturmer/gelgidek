@@ -1,12 +1,37 @@
 <template>
   <div>
     <div class="admin-card">
-      <div class="admin-card__header">
+      <div class="admin-card__header" style="flex-wrap:wrap;gap:12px;">
         <h2>Turlar Yönetimi</h2>
-        <button class="btn btn--primary btn--sm" @click="openModal()">➕ Yeni Tur Ekle</button>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;">
+          <input
+            ref="quickPdfInput"
+            type="file"
+            accept="application/pdf,.pdf"
+            style="display:none;"
+            @change="onQuickPdfSelected"
+          />
+          <button
+            class="btn btn--accent btn--sm"
+            :disabled="parsingPdf"
+            @click="triggerQuickPdf"
+          >
+            {{ parsingPdf ? '⏳ PDF Analiz Ediliyor...' : '📄 PDF Yükleyerek Otomatik Tur Ekle' }}
+          </button>
+          <button class="btn btn--primary btn--sm" @click="openModal()">➕ Manuel Tur Ekle</button>
+        </div>
       </div>
 
       <div class="admin-card__body">
+        <!-- PDF Analiz Durum Bildirimi -->
+        <div
+          v-if="parsingPdf"
+          style="background:#eff6ff;border:1px solid #93c5fd;color:#1e3a8a;padding:16px 20px;border-radius:var(--radius-sm);margin-bottom:20px;display:flex;align-items:center;gap:12px;font-weight:600;"
+        >
+          <span>⏳</span>
+          <span>PDF broşür yapay zeka ile okunuyor; tur programı, otel/fiyat tabloları, dahil/hariç hizmetler ve hareket tarihleri otomatik çıkarılıyor (yaklaşık 5-15 sn)...</span>
+        </div>
+
         <div style="margin-bottom:20px;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;">
           <input
             v-model="search"
@@ -83,6 +108,38 @@
         </div>
 
         <div style="padding:24px;flex:1;overflow-y:auto;background:var(--bg);">
+          <!-- PDF'den Otomatik Doldurma Kutusu -->
+          <div
+            style="background:linear-gradient(135deg, #eaf2fb, #dff6fc);border:2px dashed var(--primary-light);border-radius:var(--radius);padding:18px 22px;margin-bottom:24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px;"
+          >
+            <div>
+              <strong style="color:var(--primary-dark);font-size:1rem;">📄 PDF Broşürden Otomatik Tur Yükle</strong>
+              <p class="tiny muted" style="margin-top:4px;">
+                Tur PDF dosyasını seçtiğinizde başlık, gün gün program, otel/fiyat paketleri ve hareket tarihleri otomatik doldurulur ve PDF dosyası tura eklenir.
+              </p>
+              <div v-if="uploadedPdfName" style="margin-top:6px;font-size:0.82rem;color:#15803d;font-weight:700;">
+                ✓ Yüklendi: {{ uploadedPdfName }}
+              </div>
+            </div>
+            <div>
+              <input
+                ref="modalPdfInput"
+                type="file"
+                accept="application/pdf,.pdf"
+                style="display:none;"
+                @change="onModalPdfSelected"
+              />
+              <button
+                type="button"
+                class="btn btn--primary btn--sm"
+                :disabled="parsingPdf"
+                @click="triggerModalPdf"
+              >
+                {{ parsingPdf ? '⏳ PDF Okunuyor...' : '📤 PDF Dosyası Seç & Doldur' }}
+              </button>
+            </div>
+          </div>
+
           <form id="tourForm" @submit.prevent="saveTour" class="admin-form">
             <!-- 1. Genel Bilgiler -->
             <div class="admin-card" style="padding:20px;margin-bottom:24px;">
@@ -130,7 +187,7 @@
                   <input type="text" v-model="form.imageUrl" class="form-input" placeholder="https://..." />
                 </div>
                 <div class="form-group">
-                  <label>PDF Broşür Linki</label>
+                  <label>PDF Broşür Linki (PDF yüklerseniz otomatik oluşur)</label>
                   <input type="text" v-model="form.pdfUrl" class="form-input" placeholder="/turlar/001-bansko-kayak-turu-3g.pdf" />
                 </div>
               </div>
@@ -263,7 +320,7 @@
 
         <div style="padding:16px 24px;border-top:1px solid var(--border);background:var(--surface);display:flex;justify-content:flex-end;gap:12px;">
           <button type="button" class="btn btn--ghost" @click="closeModal">İptal</button>
-          <button type="submit" form="tourForm" class="btn btn--primary" :disabled="saving">
+          <button type="submit" form="tourForm" class="btn btn--primary" :disabled="saving || parsingPdf">
             {{ saving ? 'Kaydediliyor...' : 'Değişiklikleri Kaydet' }}
           </button>
         </div>
@@ -281,6 +338,11 @@ const { data: tours, pending, refresh } = await useFetch<any[]>('/api/admin/tour
 const search = ref('')
 const isModalOpen = ref(false)
 const saving = ref(false)
+const parsingPdf = ref(false)
+const uploadedPdfName = ref('')
+
+const quickPdfInput = ref<HTMLInputElement | null>(null)
+const modalPdfInput = ref<HTMLInputElement | null>(null)
 
 const defaultForm = () => ({
   id: 0,
@@ -292,6 +354,7 @@ const defaultForm = () => ({
   startingPrice: '',
   imageUrl: '',
   pdfUrl: '',
+  pdfData: '',
   summaryBadges: [] as string[],
   itinerary: [] as { day: string; title: string; description: string }[],
   pricingPackages: [] as {
@@ -376,6 +439,9 @@ const autoSlug = () => {
   const trMap: Record<string, string> = { ç: 'c', ğ: 'g', ı: 'i', i: 'i', ö: 'o', ş: 's', ü: 'u' }
   const str = form.value.title.toLowerCase().replace(/[çğıiöşü]/g, (m) => trMap[m])
   form.value.slug = str.replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')
+  if (form.value.pdfData && form.value.slug) {
+    form.value.pdfUrl = `/api/tours/${form.value.slug}/pdf`
+  }
 }
 
 const addItineraryDay = () => {
@@ -402,6 +468,7 @@ const addPricingPackage = () => {
 }
 
 const openModal = (tour: any = null) => {
+  uploadedPdfName.value = ''
   if (tour) {
     form.value = {
       id: tour.id,
@@ -413,6 +480,7 @@ const openModal = (tour: any = null) => {
       startingPrice: tour.startingPrice || '',
       imageUrl: tour.imageUrl || '',
       pdfUrl: tour.pdfUrl || '',
+      pdfData: '',
       summaryBadges: Array.isArray(tour.summaryBadges) ? [...tour.summaryBadges] : [],
       itinerary: Array.isArray(tour.itinerary) ? tour.itinerary.map((x: any) => ({ ...x })) : [],
       pricingPackages: Array.isArray(tour.pricingPackages) ? tour.pricingPackages.map((x: any) => ({ ...x })) : [],
@@ -434,6 +502,87 @@ const openModal = (tour: any = null) => {
 
 const closeModal = () => {
   isModalOpen.value = false
+}
+
+const readFileAsBase64 = (file: File): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader()
+    reader.onload = () => resolve(String(reader.result || ''))
+    reader.onerror = (err) => reject(err)
+    reader.readAsDataURL(file)
+  })
+}
+
+const processPdfFile = async (file: File, openNewModalIfClosed: boolean) => {
+  parsingPdf.value = true
+  try {
+    const base64DataUrl = await readFileAsBase64(file)
+    const extracted: any = await $fetch('/api/admin/tours/parse-pdf', {
+      method: 'POST',
+      body: {
+        pdfBase64: base64DataUrl,
+        fileName: file.name
+      }
+    })
+
+    if (openNewModalIfClosed && !isModalOpen.value) {
+      form.value = defaultForm()
+      form.value.order = (tours.value?.length || 0) + 1
+      isModalOpen.value = true
+    }
+
+    uploadedPdfName.value = file.name
+    const slug = extracted.slug || form.value.slug || 'yeni-tur'
+
+    form.value.title = extracted.title || form.value.title
+    if (!form.value.id) {
+      form.value.slug = slug
+    }
+    form.value.subtitle = extracted.subtitle || form.value.subtitle
+    form.value.destination = extracted.destination || form.value.destination
+    form.value.duration = extracted.duration || form.value.duration
+    form.value.startingPrice = extracted.startingPrice || form.value.startingPrice
+    form.value.imageUrl = extracted.imageUrl || form.value.imageUrl
+    form.value.pdfData = base64DataUrl
+    form.value.pdfUrl = `/api/tours/${form.value.slug || slug}/pdf`
+    form.value.summaryBadges = Array.isArray(extracted.summaryBadges) ? extracted.summaryBadges : []
+    form.value.itinerary = Array.isArray(extracted.itinerary) ? extracted.itinerary : []
+    form.value.pricingPackages = Array.isArray(extracted.pricingPackages) ? extracted.pricingPackages : []
+    form.value.includedServices = Array.isArray(extracted.includedServices) ? extracted.includedServices : []
+    form.value.excludedServices = Array.isArray(extracted.excludedServices) ? extracted.excludedServices : []
+    form.value.departureDates = Array.isArray(extracted.departureDates) ? extracted.departureDates : []
+    form.value.specialDates = Array.isArray(extracted.specialDates) ? extracted.specialDates : []
+    form.value.extraPackage = extracted.extraPackage || ''
+    form.value.notes = Array.isArray(extracted.notes) ? extracted.notes : []
+  } catch (err: any) {
+    alert('PDF ayrıştırma hatası: ' + (err.data?.message || err.message || err))
+  } finally {
+    parsingPdf.value = false
+  }
+}
+
+const triggerQuickPdf = () => {
+  quickPdfInput.value?.click()
+}
+
+const triggerModalPdf = () => {
+  modalPdfInput.value?.click()
+}
+
+const onQuickPdfSelected = async (e: Event) => {
+  const input = e.target as HTMLInputElement
+  const file = input.files?.[0]
+  input.value = ''
+  if (!file) return
+  await processPdfFile(file, true)
+}
+
+const onModalPdfSelected = async (e: Event) => {
+  const input = e.target as HTMLInputElement
+  const file = input.files?.[0]
+  input.value = ''
+  if (!file) return
+  await processPdfFile(file, false)
 }
 
 const saveTour = async () => {

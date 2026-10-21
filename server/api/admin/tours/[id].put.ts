@@ -9,7 +9,11 @@ export default defineEventHandler(async (event) => {
     const id = parseInt(getRouterParam(event, 'id') || '0')
     const body = await readBody(event)
 
-    return prisma.tour.update({
+    const pdfUrl = body.pdfData
+        ? `/api/tours/${body.slug}/pdf`
+        : body.pdfUrl
+
+    const updated = await prisma.tour.update({
         where: { id },
         data: {
             ...(body.title !== undefined && { title: body.title }),
@@ -19,7 +23,8 @@ export default defineEventHandler(async (event) => {
             ...(body.duration !== undefined && { duration: body.duration }),
             ...(body.startingPrice !== undefined && { startingPrice: body.startingPrice || null }),
             ...(body.imageUrl !== undefined && { imageUrl: body.imageUrl || null }),
-            ...(body.pdfUrl !== undefined && { pdfUrl: body.pdfUrl || null }),
+            ...(pdfUrl !== undefined && { pdfUrl: pdfUrl || null }),
+            ...(body.pdfData !== undefined && body.pdfData !== '' && { pdfData: body.pdfData }),
             ...(body.summaryBadges !== undefined && { summaryBadges: toJsonString(body.summaryBadges) }),
             ...(body.itinerary !== undefined && { itinerary: toJsonString(body.itinerary) }),
             ...(body.pricingPackages !== undefined && { pricingPackages: toJsonString(body.pricingPackages) }),
@@ -33,4 +38,7 @@ export default defineEventHandler(async (event) => {
             ...(body.active !== undefined && { active: Boolean(body.active) })
         }
     })
+
+    const { pdfData, ...rest } = updated
+    return rest
 })

@@ -245,6 +245,7 @@ model Tour {
   startingPrice    String?
   imageUrl         String?
   pdfUrl           String?
+  pdfData          String?  // Base64 encoded PDF for uploaded brochures
   summaryBadges    String   @default("[]") // JSON stringified array
   itinerary        String   @default("[]") // JSON stringified array of { day, title, description }
   pricingPackages  String   @default("[]") // JSON stringified array of hotel pricing objects

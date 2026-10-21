@@ -11,7 +11,7 @@ export default defineEventHandler(async () => {
         orderBy: [{ order: 'asc' }, { id: 'asc' }]
     })
 
-    return tours.map(t => ({
+    return tours.map(({ pdfData, ...t }) => ({
         ...t,
         summaryBadges: safeParse(t.summaryBadges),
         itinerary: safeParse(t.itinerary),
