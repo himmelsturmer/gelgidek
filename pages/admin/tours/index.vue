@@ -513,14 +513,50 @@ const readFileAsBase64 = (file: File): Promise<string> => {
   })
 }
 
+const extractTextWithPdfJs = async (file: File): Promise<string> => {
+  try {
+    const w = window as any
+    if (!w.pdfjsLib) {
+      await new Promise<void>((resolve, reject) => {
+        const s = document.createElement('script')
+        s.src = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js'
+        s.onload = () => resolve()
+        s.onerror = () => reject(new Error('pdf.js yüklenemedi'))
+        document.head.appendChild(s)
+      })
+      w.pdfjsLib.GlobalWorkerOptions.workerSrc =
+        'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js'
+    }
+    const buf = await file.arrayBuffer()
+    const pdf = await w.pdfjsLib.getDocument({ data: buf }).promise
+    const pages: string[] = []
+    for (let i = 1; i <= pdf.numPages; i++) {
+      const page = await pdf.getPage(i)
+      const content = await page.getTextContent()
+      const pageText = content.items.map((it: any) => it.str || '').join(' ')
+      pages.push(`--- SAYFA ${i} ---\n${pageText}`)
+    }
+    return pages.join('\n\n').trim()
+  } catch {
+    return ''
+  }
+}
+
 const processPdfFile = async (file: File, openNewModalIfClosed: boolean) => {
   parsingPdf.value = true
   try {
-    const base64DataUrl = await readFileAsBase64(file)
+    const [base64DataUrl, extractedText] = await Promise.all([
+      readFileAsBase64(file),
+      extractTextWithPdfJs(file)
+    ])
+
+    const useTextOnly = extractedText.length > 80 || file.size > 3 * 1024 * 1024
+
     const extracted: any = await $fetch('/api/admin/tours/parse-pdf', {
       method: 'POST',
       body: {
-        pdfBase64: base64DataUrl,
+        pdfText: extractedText,
+        pdfBase64: useTextOnly ? undefined : base64DataUrl,
         fileName: file.name
       }
     })
@@ -543,8 +579,10 @@ const processPdfFile = async (file: File, openNewModalIfClosed: boolean) => {
     form.value.duration = extracted.duration || form.value.duration
     form.value.startingPrice = extracted.startingPrice || form.value.startingPrice
     form.value.imageUrl = extracted.imageUrl || form.value.imageUrl
-    form.value.pdfData = base64DataUrl
-    form.value.pdfUrl = `/api/tours/${form.value.slug || slug}/pdf`
+    if (file.size <= 3.5 * 1024 * 1024) {
+      form.value.pdfData = base64DataUrl
+      form.value.pdfUrl = `/api/tours/${form.value.slug || slug}/pdf`
+    }
     form.value.summaryBadges = Array.isArray(extracted.summaryBadges) ? extracted.summaryBadges : []
     form.value.itinerary = Array.isArray(extracted.itinerary) ? extracted.itinerary : []
     form.value.pricingPackages = Array.isArray(extracted.pricingPackages) ? extracted.pricingPackages : []
@@ -555,7 +593,7 @@ const processPdfFile = async (file: File, openNewModalIfClosed: boolean) => {
     form.value.extraPackage = extracted.extraPackage || ''
     form.value.notes = Array.isArray(extracted.notes) ? extracted.notes : []
   } catch (err: any) {
-    alert('PDF ayrıştırma hatası: ' + (err.data?.message || err.message || err))
+    alert('PDF ayrıştırma hatası: ' + (err.data?.message || err.statusMessage || err.message || err))
   } finally {
     parsingPdf.value = false
   }
