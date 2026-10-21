@@ -16,51 +16,53 @@
       <div class="admin-card__body">
         <div v-if="pending" style="text-align:center;padding:20px;">Yükleniyor...</div>
         
-        <table v-else class="admin-table">
-          <thead>
-            <tr>
-              <th>Gidiş Amacı</th>
-              <th>Meslek</th>
-              <th>Evrak (Adet)</th>
-              <th>İşlem Süresi</th>
-              <th style="width:140px;text-align:right;">İşlem</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="info in visaInfos" :key="info.id">
-              <td><strong>{{ info.purpose }}</strong></td>
-              <td>{{ info.profession }}</td>
-              <td><span class="badge badge--blue">{{ info.documentList?.length || 0 }} Adet</span></td>
-              <td>{{ info.processingTime || '-' }}</td>
-              <td style="text-align:right;">
-                <div class="actions" style="justify-content:flex-end;">
-                  <button class="btn btn--ghost btn--sm" style="padding:6px 12px;" @click="openModal(info)">✏️ Düzenle</button>
-                  <button class="btn btn--danger btn--sm" style="padding:6px 12px;" @click="deleteVisaInfo(info.id)">🗑️</button>
-                </div>
-              </td>
-            </tr>
-            <tr v-if="!visaInfos || visaInfos.length === 0">
-              <td colspan="5" style="text-align:center;padding:32px;color:var(--text-muted);">
-                Henüz vize şartı eklenmemiş. "Turizm - Ücretli Çalışan" gibi kombinasyonları ekleyerek başlayın.
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <div v-else class="table-responsive">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Gidiş Amacı</th>
+                <th>Meslek</th>
+                <th>Evrak (Adet)</th>
+                <th>İşlem Süresi</th>
+                <th style="width:140px;text-align:right;">İşlem</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="info in visaInfos" :key="info.id">
+                <td><strong>{{ info.purpose }}</strong></td>
+                <td>{{ info.profession }}</td>
+                <td><span class="badge badge--blue">{{ info.documentList?.length || 0 }} Adet</span></td>
+                <td>{{ info.processingTime || '-' }}</td>
+                <td style="text-align:right;">
+                  <div class="actions" style="justify-content:flex-end;">
+                    <button class="btn btn--ghost btn--sm" style="padding:6px 12px;" @click="openModal(info)">✏️ Düzenle</button>
+                    <button class="btn btn--danger btn--sm" style="padding:6px 12px;" @click="deleteVisaInfo(info.id)">🗑️</button>
+                  </div>
+                </td>
+              </tr>
+              <tr v-if="!visaInfos || visaInfos.length === 0">
+                <td colspan="5" style="text-align:center;padding:32px;color:var(--text-muted);">
+                  Henüz vize şartı eklenmemiş. "Turizm - Ücretli Çalışan" gibi kombinasyonları ekleyerek başlayın.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
 
     <!-- Tam Sayfa Form Modalı (Kapsamlı Veri İçin) -->
     <div v-if="isModalOpen" class="modal-overlay" style="padding:0;align-items:stretch;overflow:hidden;">
-      <div class="modal" style="max-width:900px;width:100%;height:100vh;border-radius:0;display:flex;flex-direction:column;padding:0;">
-        <div style="padding:20px 24px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;background:var(--surface);">
-          <h3 style="margin:0;">{{ form.id ? 'Vize Kaydını Düzenle' : 'Yeni Vize Şartı Ekle' }}</h3>
-          <button @click="closeModal" style="font-size:1.5rem;color:var(--text-muted);">&times;</button>
+      <div class="modal" style="max-width:900px;width:100%;height:100dvh;border-radius:0;display:flex;flex-direction:column;padding:0;">
+        <div style="padding:16px 20px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;gap:12px;background:var(--surface);">
+          <h3 style="margin:0;font-size:1.1rem;">{{ form.id ? 'Vize Kaydını Düzenle' : 'Yeni Vize Şartı Ekle' }}</h3>
+          <button @click="closeModal" style="font-size:1.5rem;color:var(--text-muted);line-height:1;">&times;</button>
         </div>
         
-        <div style="padding:24px;flex:1;overflow-y:auto;background:var(--bg);">
+        <div style="padding:20px;flex:1;overflow-y:auto;background:var(--bg);">
           <form id="visaForm" @submit.prevent="saveVisaInfo" class="admin-form">
             
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;">
+            <div class="admin-grid-2" style="gap:24px;">
               <div class="admin-card" style="padding:20px;">
                 <h4 style="color:var(--primary);margin-bottom:16px;">Temel Bilgiler</h4>
                 
@@ -99,7 +101,7 @@
             </div>
 
             <!-- Kurumlar -->
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:24px;">
+            <div class="admin-grid-2" style="gap:24px;margin-top:24px;">
               <div class="admin-card" style="padding:20px;">
                 <h4 style="color:var(--primary);margin-bottom:16px;">🏛 Büyükelçilik Bilgileri</h4>
                 <div class="form-group"><label>Kurum Adı</label><input type="text" v-model="form.embassyName" class="form-input"></div>
@@ -122,7 +124,7 @@
               <h4 style="color:var(--primary);margin-bottom:16px;">📂 Form & Dilekçe Linkleri</h4>
               <p class="muted tiny" style="margin-bottom:16px;">Örnek siteden veya bulut diskinizden aldığınız direkt PDF indirme linklerini ve link isimlerini buraya girin.</p>
               
-              <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+              <div class="admin-grid-2" style="gap:20px;">
                 <div style="background:var(--bg-alt);padding:16px;border-radius:var(--radius-sm);border:1px solid var(--border);">
                   <div class="form-group"><label>Link 1 Adı</label><input type="text" v-model="form.pdf1Label" class="form-input" placeholder="Başvuru Formu"></div>
                   <div class="form-group" style="margin-top:8px;"><label>Link 1 URL</label><input type="url" v-model="form.pdf1Url" class="form-input" placeholder="https://..."></div>
@@ -145,7 +147,7 @@
           </form>
         </div>
         
-        <div style="padding:16px 24px;border-top:1px solid var(--border);background:var(--surface);display:flex;justify-content:flex-end;gap:12px;">
+        <div style="padding:14px 20px;border-top:1px solid var(--border);background:var(--surface);display:flex;justify-content:flex-end;gap:12px;flex-wrap:wrap;">
           <button type="button" class="btn btn--ghost" @click="closeModal">İptal</button>
           <button type="submit" form="visaForm" class="btn btn--primary" :disabled="saving">
             {{ saving ? 'Kaydediliyor...' : 'Tüm Değişiklikleri Kaydet' }}

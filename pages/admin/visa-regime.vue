@@ -8,28 +8,30 @@
     <div v-if="loading" class="loading">Yükleniyor...</div>
 
     <div v-else class="info-card">
-      <table class="table">
-        <thead>
-          <tr>
-            <th>Ülke Adı</th>
-            <th>Umumi</th>
-            <th>Hususi</th>
-            <th>Diplomatik</th>
-            <th width="100">İşlem</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="c in countries" :key="c.id">
-            <td>{{ c.name }}</td>
-            <td>{{ badgeLabel(c.visaUmumi) }}</td>
-            <td>{{ badgeLabel(c.visaHususi) }}</td>
-            <td>{{ badgeLabel(c.visaDiplomatik) }}</td>
-            <td>
-              <button class="btn btn--small btn--ghost" @click="editCountry(c)">Düzenle</button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <div class="table-responsive">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Ülke Adı</th>
+              <th>Umumi</th>
+              <th>Hususi</th>
+              <th>Diplomatik</th>
+              <th width="100">İşlem</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="c in countries" :key="c.id">
+              <td>{{ c.name }}</td>
+              <td>{{ badgeLabel(c.visaUmumi) }}</td>
+              <td>{{ badgeLabel(c.visaHususi) }}</td>
+              <td>{{ badgeLabel(c.visaDiplomatik) }}</td>
+              <td>
+                <button class="btn btn--sm btn--ghost" @click="editCountry(c)">Düzenle</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
 
     <!-- Edit Modal -->
@@ -39,44 +41,44 @@
         <form @submit.prevent="saveCountry">
           <div class="form-group">
             <label>Umumi (Bordo) Pasaport</label>
-            <div style="display:flex;gap:8px;">
-              <select v-model="editing.visaUmumi" class="form-control" style="width:180px">
+            <div style="display:flex;gap:8px;flex-wrap:wrap;">
+              <select v-model="editing.visaUmumi" class="form-control" style="flex:1;min-width:160px;">
                 <option value="Vize Var">Vize Var</option>
                 <option value="Vize Yok">Vize Yok</option>
                 <option value="Sınır Kapısında">Sınır Kapısında</option>
                 <option value="e-Vize">e-Vize</option>
               </select>
-              <input type="text" v-model="editing.visaUmumiNote" class="form-control" placeholder="Ek Not (örn: Schengen)" />
+              <input type="text" v-model="editing.visaUmumiNote" class="form-control" style="flex:2;min-width:180px;" placeholder="Ek Not (örn: Schengen)" />
             </div>
           </div>
           
           <div class="form-group">
             <label>Hususi (Yeşil) / Hizmet (Gri) Pasaport</label>
-            <div style="display:flex;gap:8px;">
-              <select v-model="editing.visaHususi" class="form-control" style="width:180px">
+            <div style="display:flex;gap:8px;flex-wrap:wrap;">
+              <select v-model="editing.visaHususi" class="form-control" style="flex:1;min-width:160px;">
                 <option value="Vize Var">Vize Var</option>
                 <option value="Vize Yok">Vize Yok</option>
                 <option value="Sınır Kapısında">Sınır Kapısında</option>
                 <option value="e-Vize">e-Vize</option>
               </select>
-              <input type="text" v-model="editing.visaHususiNote" class="form-control" placeholder="Ek Not (örn: 90 Gün)" />
+              <input type="text" v-model="editing.visaHususiNote" class="form-control" style="flex:2;min-width:180px;" placeholder="Ek Not (örn: 90 Gün)" />
             </div>
           </div>
           
           <div class="form-group">
             <label>Diplomatik (Siyah) Pasaport</label>
-            <div style="display:flex;gap:8px;">
-              <select v-model="editing.visaDiplomatik" class="form-control" style="width:180px">
+            <div style="display:flex;gap:8px;flex-wrap:wrap;">
+              <select v-model="editing.visaDiplomatik" class="form-control" style="flex:1;min-width:160px;">
                 <option value="Vize Var">Vize Var</option>
                 <option value="Vize Yok">Vize Yok</option>
                 <option value="Sınır Kapısında">Sınır Kapısında</option>
                 <option value="e-Vize">e-Vize</option>
               </select>
-              <input type="text" v-model="editing.visaDiplomatikNote" class="form-control" placeholder="Ek Not" />
+              <input type="text" v-model="editing.visaDiplomatikNote" class="form-control" style="flex:2;min-width:180px;" placeholder="Ek Not" />
             </div>
           </div>
 
-          <div style="margin-top: 24px; display: flex; justify-content: flex-end; gap: 8px;">
+          <div style="margin-top: 24px; display: flex; justify-content: flex-end; gap: 8px; flex-wrap: wrap;">
             <button type="button" class="btn btn--ghost" @click="editing = null">İptal</button>
             <button type="submit" class="btn btn--primary" :disabled="saving">
               {{ saving ? 'Kaydediliyor...' : 'Kaydet' }}

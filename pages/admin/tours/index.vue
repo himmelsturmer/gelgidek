@@ -45,74 +45,76 @@
 
         <div v-if="pending" style="text-align:center;padding:24px;">Yükleniyor...</div>
 
-        <table v-else class="admin-table">
-          <thead>
-            <tr>
-              <th style="width:60px;">Sıra</th>
-              <th>Tur Adı</th>
-              <th>Bölge / Ülke</th>
-              <th>Süre</th>
-              <th>Başlangıç Fiyatı</th>
-              <th style="text-align:center;">Durum</th>
-              <th style="width:200px;text-align:right;">İşlem</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="t in filteredTours" :key="t.id">
-              <td><strong>#{{ t.order }}</strong></td>
-              <td>
-                <strong>{{ t.title }}</strong>
-                <div class="tiny muted">{{ t.subtitle || t.slug }}</div>
-              </td>
-              <td>{{ t.destination || '-' }}</td>
-              <td>{{ t.duration || '-' }}</td>
-              <td><span class="badge badge--blue">{{ t.startingPrice || '-' }}</span></td>
-              <td style="text-align:center;">
-                <span
-                  :style="{
-                    padding: '4px 10px',
-                    borderRadius: '999px',
-                    fontSize: '0.75rem',
-                    fontWeight: '700',
-                    background: t.active ? '#dcfce7' : '#fee2e2',
-                    color: t.active ? '#15803d' : '#b91c1c'
-                  }"
-                >
-                  {{ t.active ? 'Aktif' : 'Pasif' }}
-                </span>
-              </td>
-              <td style="text-align:right;">
-                <div class="actions" style="justify-content:flex-end;">
-                  <NuxtLink :to="`/turlar/${t.slug}`" target="_blank" class="btn btn--ghost btn--sm" style="padding:6px 10px;" title="Sitede Gör">🌐</NuxtLink>
-                  <button class="btn btn--primary btn--sm" style="padding:6px 12px;" @click="openModal(t)">✏️ Düzenle</button>
-                  <button class="btn btn--danger btn--sm" style="padding:6px 10px;" @click="deleteTour(t.id)">🗑️</button>
-                </div>
-              </td>
-            </tr>
-            <tr v-if="filteredTours.length === 0">
-              <td colspan="7" style="text-align:center;padding:32px;color:var(--text-muted);">
-                Kayıtlı tur bulunamadı.
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <div v-else class="table-responsive">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th style="width:60px;">Sıra</th>
+                <th>Tur Adı</th>
+                <th>Bölge / Ülke</th>
+                <th>Süre</th>
+                <th>Başlangıç Fiyatı</th>
+                <th style="text-align:center;">Durum</th>
+                <th style="width:200px;text-align:right;">İşlem</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="t in filteredTours" :key="t.id">
+                <td><strong>#{{ t.order }}</strong></td>
+                <td>
+                  <strong>{{ t.title }}</strong>
+                  <div class="tiny muted">{{ t.subtitle || t.slug }}</div>
+                </td>
+                <td>{{ t.destination || '-' }}</td>
+                <td>{{ t.duration || '-' }}</td>
+                <td><span class="badge badge--blue">{{ t.startingPrice || '-' }}</span></td>
+                <td style="text-align:center;">
+                  <span
+                    :style="{
+                      padding: '4px 10px',
+                      borderRadius: '999px',
+                      fontSize: '0.75rem',
+                      fontWeight: '700',
+                      background: t.active ? '#dcfce7' : '#fee2e2',
+                      color: t.active ? '#15803d' : '#b91c1c'
+                    }"
+                  >
+                    {{ t.active ? 'Aktif' : 'Pasif' }}
+                  </span>
+                </td>
+                <td style="text-align:right;">
+                  <div class="actions" style="justify-content:flex-end;">
+                    <NuxtLink :to="`/turlar/${t.slug}`" target="_blank" class="btn btn--ghost btn--sm" style="padding:6px 10px;" title="Sitede Gör">🌐</NuxtLink>
+                    <button class="btn btn--primary btn--sm" style="padding:6px 12px;" @click="openModal(t)">✏️ Düzenle</button>
+                    <button class="btn btn--danger btn--sm" style="padding:6px 10px;" @click="deleteTour(t.id)">🗑️</button>
+                  </div>
+                </td>
+              </tr>
+              <tr v-if="filteredTours.length === 0">
+                <td colspan="7" style="text-align:center;padding:32px;color:var(--text-muted);">
+                  Kayıtlı tur bulunamadı.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
 
     <!-- Tam Ekran Tur Düzenleme / Ekleme Modalı -->
     <div v-if="isModalOpen" class="modal-overlay" style="padding:0;align-items:stretch;overflow:hidden;">
-      <div class="modal" style="max-width:1050px;width:100%;height:100vh;border-radius:0;display:flex;flex-direction:column;padding:0;">
-        <div style="padding:18px 24px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;background:var(--surface);">
-          <h3 style="margin:0;">{{ form.id ? `Turu Düzenle: ${form.title}` : 'Yeni Tur Ekle' }}</h3>
-          <button @click="closeModal" style="font-size:1.6rem;color:var(--text-muted);">&times;</button>
+      <div class="modal" style="max-width:1050px;width:100%;height:100dvh;border-radius:0;display:flex;flex-direction:column;padding:0;">
+        <div style="padding:16px 20px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;gap:12px;background:var(--surface);">
+          <h3 style="margin:0;font-size:1.1rem;">{{ form.id ? `Turu Düzenle: ${form.title}` : 'Yeni Tur Ekle' }}</h3>
+          <button @click="closeModal" style="font-size:1.6rem;color:var(--text-muted);line-height:1;">&times;</button>
         </div>
 
-        <div style="padding:24px;flex:1;overflow-y:auto;background:var(--bg);">
+        <div class="admin-modal-scroll" style="padding:20px;flex:1;overflow-y:auto;background:var(--bg);">
           <!-- PDF'den Otomatik Doldurma Kutusu -->
           <div
-            style="background:linear-gradient(135deg, #eaf2fb, #dff6fc);border:2px dashed var(--primary-light);border-radius:var(--radius);padding:18px 22px;margin-bottom:24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px;"
+            style="background:linear-gradient(135deg, #eaf2fb, #dff6fc);border:2px dashed var(--primary-light);border-radius:var(--radius);padding:16px 20px;margin-bottom:24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px;"
           >
-            <div>
+            <div style="flex:1;min-width:220px;">
               <strong style="color:var(--primary-dark);font-size:1rem;">📄 PDF Broşürden Otomatik Tur Yükle</strong>
               <p class="tiny muted" style="margin-top:4px;">
                 Tur PDF dosyasını seçtiğinizde başlık, gün gün program, otel/fiyat paketleri ve hareket tarihleri otomatik doldurulur ve PDF dosyası tura eklenir.
@@ -144,7 +146,7 @@
             <!-- 1. Genel Bilgiler -->
             <div class="admin-card" style="padding:20px;margin-bottom:24px;">
               <h4 style="color:var(--primary);margin-bottom:16px;">📌 Genel Tur Bilgileri</h4>
-              <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+              <div class="admin-grid-2">
                 <div class="form-group">
                   <label>Tur Başlığı <span style="color:red">*</span></label>
                   <input type="text" v-model="form.title" class="form-input" required @input="autoSlug" placeholder="Örn: Bansko Kayak Turu" />
@@ -153,7 +155,7 @@
                   <label>URL Slug (Benzersiz) <span style="color:red">*</span></label>
                   <input type="text" v-model="form.slug" class="form-input" required placeholder="bansko-kayak-turu-3g" />
                 </div>
-                <div class="form-group" style="grid-column:span 2;">
+                <div class="form-group col-span-full">
                   <label>Alt Başlık / Rota Özeti</label>
                   <input type="text" v-model="form.subtitle" class="form-input" placeholder="Örn: Selanik + Kavala + İskeçe + Gümülcine" />
                 </div>
@@ -169,7 +171,7 @@
                   <label>Başlangıç Fiyatı (Kartta Görünür)</label>
                   <input type="text" v-model="form.startingPrice" class="form-input" placeholder="Örn: 129 €" />
                 </div>
-                <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+                <div class="admin-grid-2" style="gap:12px;">
                   <div class="form-group">
                     <label>Sıralama</label>
                     <input type="number" v-model.number="form.order" class="form-input" />
@@ -205,15 +207,15 @@
 
             <!-- 2. Gün Gün Tur Programı -->
             <div class="admin-card" style="padding:20px;margin-bottom:24px;">
-              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+              <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:16px;">
                 <h4 style="color:var(--primary);margin:0;">🗓️ Gün Gün Tur Programı ({{ form.itinerary.length }} Gün)</h4>
                 <button type="button" class="btn btn--primary btn--sm" @click="addItineraryDay">➕ Gün Ekle</button>
               </div>
 
               <div v-for="(dayItem, idx) in form.itinerary" :key="idx" style="background:var(--bg-alt);padding:16px;border-radius:var(--radius-sm);border:1px solid var(--border);margin-bottom:12px;">
-                <div style="display:flex;gap:12px;align-items:center;margin-bottom:10px;">
-                  <input type="text" v-model="dayItem.day" class="form-input" style="max-width:160px;" placeholder="1. Gün" />
-                  <input type="text" v-model="dayItem.title" class="form-input" style="flex:1;" placeholder="İstanbul – Selanik" />
+                <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:10px;">
+                  <input type="text" v-model="dayItem.day" class="form-input" style="max-width:150px;min-width:110px;" placeholder="1. Gün" />
+                  <input type="text" v-model="dayItem.title" class="form-input" style="flex:1;min-width:180px;" placeholder="İstanbul – Selanik" />
                   <button type="button" class="btn btn--danger btn--sm" style="padding:6px 10px;" @click="form.itinerary.splice(idx, 1)">🗑️</button>
                 </div>
                 <textarea v-model="dayItem.description" class="form-textarea" style="min-height:95px;" placeholder="Günün detaylı programı..."></textarea>
@@ -222,7 +224,7 @@
 
             <!-- 3. Otel & Fiyat Paketleri -->
             <div class="admin-card" style="padding:20px;margin-bottom:24px;">
-              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+              <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:16px;">
                 <h4 style="color:var(--primary);margin:0;">🏨 Konaklama & Fiyat Paketleri ({{ form.pricingPackages.length }} Paket)</h4>
                 <button type="button" class="btn btn--primary btn--sm" @click="addPricingPackage">➕ Otel / Fiyat Paketi Ekle</button>
               </div>
@@ -232,7 +234,7 @@
                   <strong>Paket #{{ idx + 1 }}</strong>
                   <button type="button" class="btn btn--danger btn--sm" style="padding:4px 10px;" @click="form.pricingPackages.splice(idx, 1)">🗑️ Paketi Sil</button>
                 </div>
-                <div style="display:grid;grid-template-columns:2fr 1fr 1fr;gap:12px;margin-bottom:10px;">
+                <div class="admin-grid-3-tour" style="margin-bottom:10px;">
                   <div class="form-group">
                     <label>Otel Adı</label>
                     <input type="text" v-model="pkg.hotelName" class="form-input" placeholder="4* Panorama Hotel V.B" />
@@ -250,7 +252,7 @@
                   <label>Otel Açıklaması / Detay</label>
                   <input type="text" v-model="pkg.details" class="form-input" placeholder="Otel özellikleri..." />
                 </div>
-                <div style="display:grid;grid-template-columns:repeat(5, 1fr);gap:10px;">
+                <div class="admin-grid-5">
                   <div class="form-group">
                     <label>2/3 Kişilik Oda Kişi Başı</label>
                     <input type="text" v-model="pkg.doublePrice" class="form-input" placeholder="129 €" />
@@ -276,7 +278,7 @@
             </div>
 
             <!-- 4. Dahil Olan ve Olmayan Hizmetler -->
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:24px;">
+            <div class="admin-grid-2" style="gap:20px;margin-bottom:24px;">
               <div class="admin-card" style="padding:20px;">
                 <h4 style="color:#15803d;margin-bottom:10px;">✅ Fiyata Dahil Olan Hizmetler</h4>
                 <p class="tiny muted" style="margin-bottom:8px;">Her satıra bir madde yazın.</p>
@@ -290,7 +292,7 @@
             </div>
 
             <!-- 5. Hareket Tarihleri & Özel Tarihler -->
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:24px;">
+            <div class="admin-grid-2" style="gap:20px;margin-bottom:24px;">
               <div class="admin-card" style="padding:20px;">
                 <h4 style="color:var(--primary);margin-bottom:10px;">📅 Normal Hareket Tarihleri</h4>
                 <p class="tiny muted" style="margin-bottom:8px;">Her satıra bir tarih yazın.</p>
@@ -318,7 +320,7 @@
           </form>
         </div>
 
-        <div style="padding:16px 24px;border-top:1px solid var(--border);background:var(--surface);display:flex;justify-content:flex-end;gap:12px;">
+        <div style="padding:14px 20px;border-top:1px solid var(--border);background:var(--surface);display:flex;justify-content:flex-end;gap:12px;flex-wrap:wrap;">
           <button type="button" class="btn btn--ghost" @click="closeModal">İptal</button>
           <button type="submit" form="tourForm" class="btn btn--primary" :disabled="saving || parsingPdf">
             {{ saving ? 'Kaydediliyor...' : 'Değişiklikleri Kaydet' }}
@@ -573,108 +575,19 @@ const pickDefaultImage = (title: string, destination: string): string => {
 const processPdfFile = async (file: File, openNewModalIfClosed: boolean) => {
   parsingPdf.value = true
   try {
-    const [{ apiKey }, base64DataUrl, extractedText] = await Promise.all([
-      $fetch<{ apiKey: string }>('/api/admin/tours/ai-key'),
+    const [base64DataUrl, extractedText] = await Promise.all([
       readFileAsBase64(file),
       extractTextWithPdfJs(file)
     ])
 
-    const prompt = `Sen profesyonel bir tur operatörü içerik uzmanısın. Verilen Türkçe tur broşürü içeriğini incele ve içindeki tüm bilgileri eksiksiz olarak aşağıdaki JSON şemasına uygun şekilde çıkar:
-
-{
-  "title": "Turun ana başlığı (Örn: Bansko Kayak Turu veya Selanik & Kavala & İskeçe Turu)",
-  "subtitle": "Alt başlık veya rota özeti (Örn: Selanik + Kavala + İskeçe + Gümülcine (1 Gece Konaklama))",
-  "destination": "Gidilen ülke veya bölge (Örn: Yunanistan, Bulgaristan, Yunanistan & Bulgaristan, Balkanlar, İtalya vb.)",
-  "duration": "Konaklama ve gün süresi (Örn: 1 Gece 3 Gün, 2 Gece 4 Gün, 3 Gece 5 Gün)",
-  "startingPrice": "En düşük iki kişilik odada kişi başı başlangıç fiyatı (Örn: 129 €)",
-  "summaryBadges": [
-    "Lüks Otobüslerle Ulaşım",
-    "Gizlenmiş Mecburi Ücret Yok",
-    "Yeşil Pasaporta Vize Yok"
-  ],
-  "itinerary": [
-    {
-      "day": "1. Gün",
-      "title": "İstanbul – Selanik",
-      "description": "O güne ait tüm detaylı tur programı metni..."
-    }
-  ],
-  "pricingPackages": [
-    {
-      "hotelName": "Otel adı (Örn: 4* Panorama Hotel V.B)",
-      "board": "Konaklama tipi (Örn: Oda Kahvaltı)",
-      "details": "Otel açıklaması veya dönem bilgisi",
-      "doublePrice": "İki/Üç kişilik odada kişi başı fiyatı (Örn: 129 €)",
-      "singlePrice": "Tek kişilik oda fiyatı (Örn: 209 €)",
-      "child1Price": "3-12 yaş 1. çocuk fiyatı (Örn: 100 €)",
-      "child2Price": "Varsa 2. çocuk fiyatı yoksa '-'",
-      "babyPrice": "0-2 yaş bebek fiyatı (Örn: 0-2 Yaş Ücretsiz)",
-      "period": "Dönem adı (Örn: 2027 Dönemi veya Özel Dönem / Bayram)"
-    }
-  ],
-  "includedServices": [
-    "Fiyata dahil olan her bir madde"
-  ],
-  "excludedServices": [
-    "Fiyata dahil olmayan her bir madde"
-  ],
-  "departureDates": [
-    "Normal hareket tarihleri listesi (Örn: 1 Ocak 2027 Cuma)"
-  ],
-  "specialDates": [
-    "Varsa özel / bayram hareket tarihleri listesi (Örn: 8 Mart 2027 Pazartesi (Ramazan Bayramı))"
-  ],
-  "extraPackage": "Varsa avantajlı ekstra tur paketi bilgisi ve fiyatı, yoksa boş string",
-  "notes": [
-    "NOTLAR bölümündeki her bir madde"
-  ]
-}
-
-Kurallar:
-- PDF içindeki gün gün tur programını kısaltmadan, tüm detaylarıyla "itinerary" dizisine aktar.
-- Birden fazla otel veya dönem fiyat tablosu varsa hepsini ayrı eleman olarak "pricingPackages" dizisine ekle.
-- Hareket tarihlerinin tamamını eksiksiz çıkar.
-- Sadece geçerli bir JSON nesnesi döndür.`
-
-    const parts: any[] = []
-    if (extractedText && extractedText.length > 80) {
-      parts.push({ text: `TUR BROŞÜRÜ METNİ:\n\n${extractedText}\n\n${prompt}` })
-    } else {
-      const cleanBase64 = base64DataUrl.replace(/^data:application\/pdf;base64,/, '')
-      parts.push({ inline_data: { mime_type: 'application/pdf', data: cleanBase64 } })
-      parts.push({ text: prompt })
-    }
-
-    const geminiRes = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          contents: [{ parts }],
-          generationConfig: {
-            responseMimeType: 'application/json',
-            thinkingConfig: { thinkingBudget: 0 }
-          }
-        })
+    const extracted = await $fetch<any>('/api/admin/tours/parse-pdf', {
+      method: 'POST',
+      body: {
+        fileName: file.name,
+        pdfText: extractedText && extractedText.length > 80 ? extractedText : undefined,
+        pdfBase64: !extractedText || extractedText.length <= 80 ? base64DataUrl : undefined
       }
-    )
-
-    if (!geminiRes.ok) {
-      const errTxt = await geminiRes.text()
-      throw new Error(`Yapay zeka servisi hatası (${geminiRes.status}): ${errTxt.slice(0, 180)}`)
-    }
-
-    const geminiJson: any = await geminiRes.json()
-    const rawText = geminiJson?.candidates?.[0]?.content?.parts?.[0]?.text || ''
-    let extracted: any = {}
-    try {
-      extracted = JSON.parse(rawText)
-    } catch {
-      const match = rawText.match(/\{[\s\S]*\}/)
-      if (match) extracted = JSON.parse(match[0])
-      else throw new Error('PDF yanıtı ayrıştırılamadı.')
-    }
+    })
 
     if (openNewModalIfClosed && !isModalOpen.value) {
       form.value = defaultForm()

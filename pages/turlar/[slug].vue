@@ -107,15 +107,15 @@
         </div>
 
         <!-- Fiyata Dahil Olan & Olmayan Hizmetler -->
-        <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(300px, 1fr));gap:24px;margin-top:24px;">
-          <div v-if="tour.includedServices && tour.includedServices.length" class="info-card">
+        <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(min(100%, 280px), 1fr));gap:24px;margin-top:24px;">
+          <div v-if="tour.includedServices && tour.includedServices.length" class="info-card" style="margin-bottom:0;">
             <h3 style="color:#15803d;">✅ Fiyatlara Dahil Olan Hizmetler</h3>
             <ul class="service-list service-list--inc">
               <li v-for="(s, i) in tour.includedServices" :key="i">{{ s }}</li>
             </ul>
           </div>
 
-          <div v-if="tour.excludedServices && tour.excludedServices.length" class="info-card">
+          <div v-if="tour.excludedServices && tour.excludedServices.length" class="info-card" style="margin-bottom:0;">
             <h3 style="color:#b91c1c;">❌ Fiyatlara Dahil Olmayan Servisler</h3>
             <ul class="service-list service-list--exc">
               <li v-for="(s, i) in tour.excludedServices" :key="i">{{ s }}</li>
@@ -215,7 +215,7 @@ useHead({
   color: var(--primary-dark);
 }
 .tour-hero h1 {
-  font-size: clamp(1.6rem, 3.2vw, 2.4rem);
+  font-size: clamp(1.45rem, 3.2vw, 2.4rem);
   font-weight: 800;
   line-height: 1.2;
   margin-bottom: 6px;
@@ -278,7 +278,7 @@ useHead({
 }
 .pricing-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
   gap: 20px;
 }
 .pricing-card {
@@ -327,6 +327,7 @@ useHead({
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 10px;
   font-size: 0.88rem;
   padding: 4px 0;
   border-bottom: 1px dashed rgba(16, 66, 113, 0.1);
@@ -334,6 +335,7 @@ useHead({
 .pricing-row strong {
   color: var(--primary-dark);
   font-weight: 800;
+  white-space: nowrap;
 }
 .extra-pkg-box {
   background: linear-gradient(135deg, #eaf2fb, #dff6fc);
@@ -368,5 +370,19 @@ useHead({
   background: #fef3c7;
   border-color: #f59e0b;
   color: #92400e;
+}
+@media (max-width: 600px) {
+  .tour-hero {
+    min-height: 250px;
+  }
+  .tour-hero__overlay {
+    padding: 22px 18px;
+  }
+  .itinerary-item {
+    padding: 14px 16px;
+  }
+  .pricing-card {
+    padding: 16px;
+  }
 }
 </style>

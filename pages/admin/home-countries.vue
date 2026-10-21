@@ -13,12 +13,12 @@
 
         <div v-if="pending" style="text-align:center;padding:20px;">Yükleniyor...</div>
         
-        <div v-else style="display:grid;grid-template-columns:1fr 1fr;gap:40px;">
+        <div v-else class="admin-grid-2" style="gap:32px;">
           <!-- Tüm Ülkeler Listesi -->
           <div>
-            <h3 style="font-size:1.1rem;color:var(--primary);margin-bottom:12px;display:flex;justify-content:space-between;">
-              Tüm Ülkeler
-              <input type="text" v-model="search" placeholder="Ara..." style="padding:4px 8px;border:1px solid var(--border);border-radius:4px;font-size:0.85rem;" />
+            <h3 style="font-size:1.1rem;color:var(--primary);margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+              <span>Tüm Ülkeler</span>
+              <input type="text" v-model="search" placeholder="Ara..." style="padding:6px 10px;border:1px solid var(--border);border-radius:6px;font-size:0.85rem;" />
             </h3>
             
             <div style="border:1px solid var(--border);border-radius:var(--radius-sm);max-height:600px;overflow-y:auto;background:var(--bg);">

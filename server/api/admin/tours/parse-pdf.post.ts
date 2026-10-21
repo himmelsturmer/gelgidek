@@ -41,8 +41,15 @@ export default defineEventHandler(async (event) => {
         const apiKey =
             config.geminiApiKey ||
             process.env.NUXT_GEMINI_API_KEY ||
-            process.env.GEMINI_API_KEY ||
-            ['AIzaSyDBPunkJrJloRWbn', '4gB8bwa-bVrIjNCdJg'].join('')
+            process.env.GEMINI_API_KEY
+
+        if (!apiKey) {
+            throw createError({
+                statusCode: 500,
+                statusMessage: 'Sunucuda GEMINI_API_KEY tanımlı değil.',
+                message: 'Sunucuda GEMINI_API_KEY tanımlı değil.'
+            })
+        }
 
         const prompt = `Sen profesyonel bir tur operatörü içerik uzmanısın. Verilen Türkçe tur broşürü içeriğini incele ve içindeki tüm bilgileri eksiksiz olarak aşağıdaki JSON şemasına uygun şekilde çıkar:
 
@@ -123,7 +130,8 @@ Kurallar:
                 body: JSON.stringify({
                     contents: [{ parts }],
                     generationConfig: {
-                        responseMimeType: 'application/json'
+                        responseMimeType: 'application/json',
+                        thinkingConfig: { thinkingBudget: 0 }
                     }
                 })
             }

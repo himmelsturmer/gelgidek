@@ -7,7 +7,7 @@
       </div>
       
       <div class="admin-card__body">
-        <div style="margin-bottom:20px;display:flex;justify-content:space-between;align-items:center;">
+        <div style="margin-bottom:20px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;">
           <input 
             type="text" 
             v-model="search" 
@@ -20,40 +20,42 @@
 
         <div v-if="pending" style="text-align:center;padding:20px;">Yükleniyor...</div>
         
-        <table v-else class="admin-table">
-          <thead>
-            <tr>
-              <th style="width:60px;">Bayrak</th>
-              <th>Ülke Adı</th>
-              <th>URL Slug</th>
-              <th>Kıta</th>
-              <th style="text-align:center;">Vize Kaydı</th>
-              <th style="width:140px;text-align:right;">İşlem</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="c in filteredCountries" :key="c.id">
-              <td style="font-size:1.5rem;">{{ c.flagUrl || '🌍' }}</td>
-              <td><strong>{{ c.name }}</strong></td>
-              <td class="muted">{{ c.slug }}</td>
-              <td>{{ c.continent || '-' }}</td>
-              <td style="text-align:center;">
-                <span class="badge badge--blue">{{ c._count?.visaInfos || 0 }}</span>
-              </td>
-              <td style="text-align:right;">
-                <div class="actions" style="justify-content:flex-end;">
-                  <NuxtLink :to="`/admin/countries/${c.id}`" class="btn btn--primary btn--sm" style="padding:6px 12px;">Detay</NuxtLink>
-                  <button class="btn btn--danger btn--sm" style="padding:6px 12px;" @click="deleteCountry(c.id)">🗑️</button>
-                </div>
-              </td>
-            </tr>
-            <tr v-if="filteredCountries.length === 0">
-              <td colspan="6" style="text-align:center;padding:32px;color:var(--text-muted);">
-                Eşleşen ülke bulunamadı.
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <div v-else class="table-responsive">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th style="width:60px;">Bayrak</th>
+                <th>Ülke Adı</th>
+                <th>URL Slug</th>
+                <th>Kıta</th>
+                <th style="text-align:center;">Vize Kaydı</th>
+                <th style="width:140px;text-align:right;">İşlem</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="c in filteredCountries" :key="c.id">
+                <td style="font-size:1.5rem;">{{ c.flagUrl || '🌍' }}</td>
+                <td><strong>{{ c.name }}</strong></td>
+                <td class="muted">{{ c.slug }}</td>
+                <td>{{ c.continent || '-' }}</td>
+                <td style="text-align:center;">
+                  <span class="badge badge--blue">{{ c._count?.visaInfos || 0 }}</span>
+                </td>
+                <td style="text-align:right;">
+                  <div class="actions" style="justify-content:flex-end;">
+                    <NuxtLink :to="`/admin/countries/${c.id}`" class="btn btn--primary btn--sm" style="padding:6px 12px;">Detay</NuxtLink>
+                    <button class="btn btn--danger btn--sm" style="padding:6px 12px;" @click="deleteCountry(c.id)">🗑️</button>
+                  </div>
+                </td>
+              </tr>
+              <tr v-if="filteredCountries.length === 0">
+                <td colspan="6" style="text-align:center;padding:32px;color:var(--text-muted);">
+                  Eşleşen ülke bulunamadı.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
 
@@ -74,7 +76,7 @@
             <span class="tiny muted" style="margin-top:4px;">Örn: almanya, amerika-birlesik-devletleri</span>
           </div>
           
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+          <div class="admin-grid-2" style="gap:20px;">
             <div class="form-group">
               <label>Bayrak Emoji</label>
               <input type="text" v-model="form.flagUrl" class="form-input" placeholder="🇩🇪" />
@@ -94,7 +96,7 @@
             </div>
           </div>
           
-          <div style="display:flex;gap:12px;justify-content:flex-end;margin-top:24px;">
+          <div style="display:flex;gap:12px;justify-content:flex-end;margin-top:24px;flex-wrap:wrap;">
             <button type="button" class="btn btn--ghost" @click="closeModal">İptal</button>
             <button type="submit" class="btn btn--primary" :disabled="saving">
               {{ saving ? 'Kaydediliyor...' : 'Kaydet' }}

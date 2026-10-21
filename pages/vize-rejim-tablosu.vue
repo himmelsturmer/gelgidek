@@ -6,13 +6,22 @@
         <p class="muted">Türk vatandaşlarının tabi olduğu vize uygulamaları</p>
       </div>
       
-      <div v-if="settings?.visa_regime_notice" class="info-card" style="margin-bottom: 32px;border-left:4px solid var(--accent);">
+      <div v-if="settings?.visa_regime_notice" class="info-card" style="margin-bottom: 24px;border-left:4px solid var(--accent);">
         <p class="tiny muted" style="margin:0;">
           * {{ settings.visa_regime_notice }}
         </p>
       </div>
 
-      <div style="overflow-x:auto;">
+      <div style="margin-bottom: 20px; max-width: 380px;">
+        <input
+          v-model="search"
+          type="text"
+          class="form-input"
+          placeholder="🔍 Ülke ara..."
+        />
+      </div>
+
+      <div class="table-responsive">
         <table class="visa-table">
           <thead>
             <tr>
@@ -23,8 +32,8 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="row in countries" :key="row.id">
-              <td><strong>{{ row.name }}</strong></td>
+            <tr v-for="row in filteredCountries" :key="row.id">
+              <td><strong>{{ row.flagUrl }} {{ row.name }}</strong></td>
               <td>
                 <span :class="badgeClass(row.visaUmumi)">{{ badgeLabel(row.visaUmumi) }}</span>
                 <span v-if="row.visaUmumiNote" style="font-size:0.82rem;color:var(--text-muted);"> {{ row.visaUmumiNote }}</span>
@@ -40,18 +49,30 @@
             </tr>
           </tbody>
         </table>
-        <p class="tiny muted" style="margin-top:12px;text-align:right;">*Seyahat öncesi ilgili konsolosluktan teyit ediniz.</p>
       </div>
+      <p class="tiny muted" style="margin-top:12px;text-align:right;">*Seyahat öncesi ilgili konsolosluktan teyit ediniz.</p>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
-
 useHead({
   title: 'Vize Rejim Tablosu — gelgidek.com',
   meta: [{ name: 'description', content: 'Türk vatandaşlarının ülkelere göre tabi olduğu vize rejim tablosu ve uygulamaları.' }]
+})
+
+const search = ref('')
+
+const [{ data: countriesData }, { data: settings }] = await Promise.all([
+  useFetch<any[]>('/api/countries'),
+  useFetch<Record<string, string>>('/api/settings')
+])
+
+const filteredCountries = computed(() => {
+  const list = countriesData.value || []
+  if (!search.value.trim()) return list
+  const q = search.value.toLocaleLowerCase('tr-TR')
+  return list.filter((c: any) => c.name?.toLocaleLowerCase('tr-TR').includes(q))
 })
 
 function badgeClass(status: string) {
@@ -66,20 +87,4 @@ function badgeLabel(status: string) {
   if (!status) return 'Belirtilmedi'
   return status
 }
-
-const countries = ref([])
-const settings = ref(null)
-
-onMounted(async () => {
-  try {
-    const [cRes, sRes] = await Promise.all([
-      $fetch('/api/countries'),
-      $fetch('/api/settings')
-    ])
-    countries.value = cRes
-    settings.value = sRes
-  } catch (err) {
-    console.error('Error loading data', err)
-  }
-})
 </script>

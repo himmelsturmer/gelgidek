@@ -27,6 +27,7 @@
           <NuxtLink to="/turlar" @click="navOpen=false">Turlar</NuxtLink>
           <NuxtLink to="/ulkeler" @click="navOpen=false">Ülkeler</NuxtLink>
           <NuxtLink to="/vize-rejim-tablosu" @click="navOpen=false">Vize Rejim Tablosu</NuxtLink>
+          <NuxtLink to="/randevu-sorgulama" @click="navOpen=false">Randevu Sorgulama</NuxtLink>
           <NuxtLink to="/hakkimizda" @click="navOpen=false">Hakkımızda</NuxtLink>
           <NuxtLink to="/iletisim" @click="navOpen=false">İletişim</NuxtLink>
         </nav>

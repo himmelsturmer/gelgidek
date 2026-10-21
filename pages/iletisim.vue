@@ -10,22 +10,22 @@
           </p>
 
           <div class="contact-items">
-            <div class="contact-item" v-if="settings?.contact_email">
+            <div class="contact-item" v-if="contactEmail">
               <div class="contact-item__icon">✉️</div>
               <div>
                 <div class="contact-item__label">E-posta</div>
                 <div class="contact-item__value">
-                  <a :href="'mailto:' + settings.contact_email">{{ settings.contact_email }}</a>
+                  <a :href="'mailto:' + contactEmail">{{ contactEmail }}</a>
                 </div>
               </div>
             </div>
 
-            <div class="contact-item" v-if="settings?.contact_phone">
+            <div class="contact-item" v-if="contactPhone">
               <div class="contact-item__icon">📞</div>
               <div>
                 <div class="contact-item__label">Telefon</div>
                 <div class="contact-item__value">
-                  <a :href="'tel:' + formatPhone(settings.contact_phone)">{{ settings.contact_phone }}</a>
+                  <a :href="'tel:' + formatPhone(contactPhone)">{{ contactPhone }}</a>
                 </div>
               </div>
             </div>
@@ -56,13 +56,13 @@
           <h3>Bize Ulaşın</h3>
           <p>Size en uygun kanaldan hemen iletişime geçin. İlk görüşme ücretsiz ve bağlayıcı değildir.</p>
           <div style="display:flex;flex-direction:column;gap:12px;">
-            <a v-if="settings?.contact_whatsapp" class="btn btn--block btn--whatsapp" :href="'https://wa.me/' + settings.contact_whatsapp" target="_blank" rel="noopener">
+            <a v-if="contactWhatsapp" class="btn btn--block btn--whatsapp" :href="'https://wa.me/' + contactWhatsapp" target="_blank" rel="noopener noreferrer">
               💬 WhatsApp ile Yazın
             </a>
-            <a v-if="settings?.contact_email" class="btn btn--block btn--ghost" :href="'mailto:' + settings.contact_email">
+            <a v-if="contactEmail" class="btn btn--block btn--ghost" :href="'mailto:' + contactEmail">
               ✉️ E-posta Gönderin
             </a>
-            <a v-if="settings?.contact_phone" class="btn btn--block btn--ghost" :href="'tel:' + formatPhone(settings.contact_phone)">
+            <a v-if="contactPhone" class="btn btn--block btn--ghost" :href="'tel:' + formatPhone(contactPhone)">
               📞 Hemen Arayın
             </a>
           </div>
@@ -73,25 +73,18 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
-
 useHead({
   title: 'İletişim — gelgidek.com',
   meta: [{ name: 'description', content: "gelgidek.com ile iletişime geçin. Vize danışmanlığı, yurt dışı turları ve seyahat planlaması." }]
 })
 
-const settings = ref(null)
+const { data: settings } = await useFetch<Record<string, string>>('/api/settings')
+
+const contactEmail = computed(() => settings.value?.contact_email || 'emre@gelgidek.com')
+const contactPhone = computed(() => settings.value?.contact_phone || '+90 507 442 43 78')
+const contactWhatsapp = computed(() => settings.value?.contact_whatsapp || '905074424378')
 
 function formatPhone(phone: string) {
-  // Removes spaces and dashes for the tel: link
   return phone ? phone.replace(/[\s-()]/g, '') : ''
 }
-
-onMounted(async () => {
-  try {
-    settings.value = await $fetch('/api/settings')
-  } catch (err) {
-    console.error('Settings could not be loaded', err)
-  }
-})
 </script>

@@ -42,7 +42,7 @@
             <p v-else class="muted tiny">Evrak listesi girilmemiş.</p>
           </div>
 
-          <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(280px, 1fr));gap:20px;">
+          <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(min(100%, 260px), 1fr));gap:20px;">
             <div class="info-card" v-if="visaInfo.applicationZones && visaInfo.applicationZones.length > 0">
               <h3>📍 Başvuru Bölgeleri</h3>
               <ul style="list-style:disc;padding-left:20px;color:var(--text-muted);font-size:0.9rem;">
@@ -61,24 +61,24 @@
             <div style="color:var(--text-muted);font-size:0.9rem;white-space:pre-wrap;">{{ visaInfo.description }}</div>
           </div>
 
-          <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(280px, 1fr));gap:20px;">
+          <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(min(100%, 260px), 1fr));gap:20px;">
             <div class="info-card" v-if="visaInfo.embassyName">
               <h3>🏛 Büyükelçilik</h3>
-              <div style="color:var(--text-muted);font-size:0.9rem;">
+              <div style="color:var(--text-muted);font-size:0.9rem;word-break:break-word;">
                 <strong>{{ visaInfo.embassyName }}</strong><br>
                 <div v-if="visaInfo.embassyAddress" style="margin-top:4px;">{{ visaInfo.embassyAddress }}</div>
                 <div v-if="visaInfo.embassyPhone" style="margin-top:4px;">📞 {{ visaInfo.embassyPhone }}</div>
-                <div v-if="visaInfo.embassyWeb" style="margin-top:4px;">🌐 <a :href="visaInfo.embassyWeb.startsWith('http') ? visaInfo.embassyWeb : 'https://' + visaInfo.embassyWeb" target="_blank">{{ visaInfo.embassyWeb }}</a></div>
+                <div v-if="visaInfo.embassyWeb" style="margin-top:4px;">🌐 <a :href="visaInfo.embassyWeb.startsWith('http') ? visaInfo.embassyWeb : 'https://' + visaInfo.embassyWeb" target="_blank" rel="noopener noreferrer">{{ visaInfo.embassyWeb }}</a></div>
               </div>
             </div>
 
             <div class="info-card" v-if="visaInfo.consulateName">
               <h3>🏢 Konsolosluk</h3>
-              <div style="color:var(--text-muted);font-size:0.9rem;">
+              <div style="color:var(--text-muted);font-size:0.9rem;word-break:break-word;">
                 <strong>{{ visaInfo.consulateName }}</strong><br>
                 <div v-if="visaInfo.consulateAddress" style="margin-top:4px;">{{ visaInfo.consulateAddress }}</div>
                 <div v-if="visaInfo.consulatePhone" style="margin-top:4px;">📞 {{ visaInfo.consulatePhone }}</div>
-                <div v-if="visaInfo.consulateWeb" style="margin-top:4px;">🌐 <a :href="visaInfo.consulateWeb.startsWith('http') ? visaInfo.consulateWeb : 'https://' + visaInfo.consulateWeb" target="_blank">{{ visaInfo.consulateWeb }}</a></div>
+                <div v-if="visaInfo.consulateWeb" style="margin-top:4px;">🌐 <a :href="visaInfo.consulateWeb.startsWith('http') ? visaInfo.consulateWeb : 'https://' + visaInfo.consulateWeb" target="_blank" rel="noopener noreferrer">{{ visaInfo.consulateWeb }}</a></div>
               </div>
             </div>
           </div>
@@ -86,10 +86,10 @@
           <div class="info-card" v-if="hasPdfs">
             <h3>📂 Formlar ve Dilekçeler</h3>
             <div class="pdf-grid">
-              <a v-if="visaInfo.pdf1Url && visaInfo.pdf1Label" :href="visaInfo.pdf1Url" target="_blank" class="pdf-link">📄 {{ visaInfo.pdf1Label }}</a>
-              <a v-if="visaInfo.pdf2Url && visaInfo.pdf2Label" :href="visaInfo.pdf2Url" target="_blank" class="pdf-link">📄 {{ visaInfo.pdf2Label }}</a>
-              <a v-if="visaInfo.pdf3Url && visaInfo.pdf3Label" :href="visaInfo.pdf3Url" target="_blank" class="pdf-link">📄 {{ visaInfo.pdf3Label }}</a>
-              <a v-if="visaInfo.pdf4Url && visaInfo.pdf4Label" :href="visaInfo.pdf4Url" target="_blank" class="pdf-link">📄 {{ visaInfo.pdf4Label }}</a>
+              <a v-if="visaInfo.pdf1Url && visaInfo.pdf1Label" :href="visaInfo.pdf1Url" target="_blank" rel="noopener noreferrer" class="pdf-link">📄 {{ visaInfo.pdf1Label }}</a>
+              <a v-if="visaInfo.pdf2Url && visaInfo.pdf2Label" :href="visaInfo.pdf2Url" target="_blank" rel="noopener noreferrer" class="pdf-link">📄 {{ visaInfo.pdf2Label }}</a>
+              <a v-if="visaInfo.pdf3Url && visaInfo.pdf3Label" :href="visaInfo.pdf3Url" target="_blank" rel="noopener noreferrer" class="pdf-link">📄 {{ visaInfo.pdf3Label }}</a>
+              <a v-if="visaInfo.pdf4Url && visaInfo.pdf4Label" :href="visaInfo.pdf4Url" target="_blank" rel="noopener noreferrer" class="pdf-link">📄 {{ visaInfo.pdf4Label }}</a>
             </div>
           </div>
 

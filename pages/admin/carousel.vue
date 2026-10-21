@@ -8,43 +8,45 @@
       
       <div class="admin-card__body">
         <div v-if="pending" style="padding:20px;text-align:center;">Yükleniyor...</div>
-        <table v-else class="admin-table">
-          <thead>
-            <tr>
-              <th style="width:120px;">Görsel</th>
-              <th>Başlık</th>
-              <th>Sıra</th>
-              <th>Durum</th>
-              <th style="width:140px;text-align:right;">İşlem</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="slide in slides" :key="slide.id">
-              <td>
-                <div class="slide-thumb">
-                  <img :src="slide.imageUrl" :alt="slide.title" v-if="slide.imageUrl" />
-                  <span v-else>Yok</span>
-                </div>
-              </td>
-              <td><strong>{{ slide.title }}</strong><br><span class="tiny muted">{{ slide.subtitle }}</span></td>
-              <td>{{ slide.order }}</td>
-              <td>
-                <span :class="['badge', slide.active ? 'badge--green' : 'badge--yellow']">
-                  {{ slide.active ? 'Aktif' : 'Pasif' }}
-                </span>
-              </td>
-              <td style="text-align:right;">
-                <div class="actions" style="justify-content:flex-end;">
-                  <button class="btn btn--ghost btn--sm" style="padding:6px 12px;" @click="openModal(slide)">✏️</button>
-                  <button class="btn btn--danger btn--sm" style="padding:6px 12px;" @click="deleteSlide(slide.id)">🗑️</button>
-                </div>
-              </td>
-            </tr>
-            <tr v-if="!slides || slides.length === 0">
-              <td colspan="5" style="text-align:center;padding:32px;color:var(--text-muted);">Henüz slayt eklenmemiş.</td>
-            </tr>
-          </tbody>
-        </table>
+        <div v-else class="table-responsive">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th style="width:120px;">Görsel</th>
+                <th>Başlık</th>
+                <th>Sıra</th>
+                <th>Durum</th>
+                <th style="width:140px;text-align:right;">İşlem</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="slide in slides" :key="slide.id">
+                <td>
+                  <div class="slide-thumb">
+                    <img :src="slide.imageUrl" :alt="slide.title" v-if="slide.imageUrl" />
+                    <span v-else>Yok</span>
+                  </div>
+                </td>
+                <td><strong>{{ slide.title }}</strong><br><span class="tiny muted">{{ slide.subtitle }}</span></td>
+                <td>{{ slide.order }}</td>
+                <td>
+                  <span :class="['badge', slide.active ? 'badge--green' : 'badge--yellow']">
+                    {{ slide.active ? 'Aktif' : 'Pasif' }}
+                  </span>
+                </td>
+                <td style="text-align:right;">
+                  <div class="actions" style="justify-content:flex-end;">
+                    <button class="btn btn--ghost btn--sm" style="padding:6px 12px;" @click="openModal(slide)">✏️</button>
+                    <button class="btn btn--danger btn--sm" style="padding:6px 12px;" @click="deleteSlide(slide.id)">🗑️</button>
+                  </div>
+                </td>
+              </tr>
+              <tr v-if="!slides || slides.length === 0">
+                <td colspan="5" style="text-align:center;padding:32px;color:var(--text-muted);">Henüz slayt eklenmemiş.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
 
@@ -74,7 +76,7 @@
             <input type="url" v-model="form.link" class="form-input" placeholder="https://..." />
           </div>
           
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+          <div class="admin-grid-2" style="gap:20px;">
             <div class="form-group">
               <label>Sıralama</label>
               <input type="number" v-model="form.order" class="form-input" />
@@ -94,7 +96,7 @@
             </div>
           </div>
           
-          <div style="display:flex;gap:12px;justify-content:flex-end;margin-top:24px;">
+          <div style="display:flex;gap:12px;justify-content:flex-end;margin-top:24px;flex-wrap:wrap;">
             <button type="button" class="btn btn--ghost" @click="closeModal">İptal</button>
             <button type="submit" class="btn btn--primary" :disabled="saving">
               {{ saving ? 'Kaydediliyor...' : 'Kaydet' }}

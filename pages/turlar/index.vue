@@ -164,7 +164,7 @@ const filteredTours = computed(() => {
 }
 .tours-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 310px), 1fr));
   gap: 28px;
 }
 .tour-card {
@@ -204,7 +204,8 @@ const filteredTours = computed(() => {
   right: 12px;
   display: flex;
   justify-content: space-between;
-  gap: 8px;
+  flex-wrap: wrap;
+  gap: 6px;
   pointer-events: none;
 }
 .tour-pill {
@@ -277,5 +278,20 @@ const filteredTours = computed(() => {
   gap: 10px;
   padding-top: 14px;
   border-top: 1px solid var(--border);
+  flex-wrap: wrap;
+}
+@media (max-width: 600px) {
+  .tours-search {
+    max-width: 100%;
+  }
+  .tours-grid {
+    gap: 20px;
+  }
+  .tour-card__media {
+    height: 195px;
+  }
+  .tour-card__body {
+    padding: 18px 16px;
+  }
 }
 </style>

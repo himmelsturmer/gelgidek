@@ -1,11 +1,15 @@
 import { SignJWT, jwtVerify } from 'jose'
 
-export async function signToken(payload: Record<string, unknown>, secret: string): Promise<string> {
+export async function signToken(
+    payload: Record<string, unknown>,
+    secret: string,
+    expiresIn: string = '7d'
+): Promise<string> {
     const key = new TextEncoder().encode(secret)
     return new SignJWT(payload)
         .setProtectedHeader({ alg: 'HS256' })
         .setIssuedAt()
-        .setExpirationTime('7d')
+        .setExpirationTime(expiresIn)
         .sign(key)
 }
 
